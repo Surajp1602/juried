@@ -1,0 +1,14 @@
+{
+  "name": "juried",
+  "displayName": "Juried",
+  "version": "1.1.0",
+  "description": "A design studio with a jury: one sentence in, a researched, art-directed, cinematic 3D website out, graded by a calibrated vision jury until it scores 7+/10.",
+  "author": {
+    "name": "Suraj Pawar",
+    "url": "https://github.com/Surajp1602"
+  },
+  "homepage": "https://github.com/Surajp1602/juried",
+  "repository": "https://github.com/Surajp1602/juried",
+  "license": "MIT",
+  "keywords": ["website", "landing-page", "webgl", "3d", "design", "higgsfield", "gsap", "three.js", "jury", "evaluation"]
+}

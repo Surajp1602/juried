@@ -1,0 +1,37 @@
+{
+  "name": "juried-site",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A website built by Juried: research, art direction, generated film, real-time 3D, and a jury.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
+    "doctor": "node tools/doctor.mjs",
+    "assets:check": "node tools/hf.mjs check",
+    "assets:smoke": "node tools/hf.mjs smoke",
+    "assets:dry": "node tools/hf.mjs run juried/asset-plan.json --dry-run",
+    "assets": "node tools/hf.mjs run juried/asset-plan.json",
+    "media": "node tools/film.mjs all",
+    "jury": "vite build && node tools/jury/capture.mjs",
+    "jury:quick": "vite build && node tools/jury/capture.mjs --quick",
+    "jury:calibrate": "vite build && node tools/jury/mutate.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/manrope": "^5.3.0",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.26",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "axe-core": "^4.13.0",
+    "ffmpeg-static": "^5.3.0",
+    "playwright": "^1.63.0",
+    "pngjs": "^7.0.0",
+    "vite": "^8.3.1"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
+}
