@@ -6,6 +6,8 @@
 // mark.form(1)      // 0 = molten droplets, 1 = the glyph (animate it)
 // mark.melt(0..1)   // scroll-driven: glyph dissolves + camera dives into the metal
 // mark.dispose()
+//
+// Option time: a fixed clock in seconds, for repeatable stills and tests.
 
 const VERT = `#version 300 es
 in vec2 p; out vec2 vUv;
@@ -310,7 +312,7 @@ export function createLiquidMark(canvas, opts) {
     state.mouse[1] += (state.mouseTarget[1] - state.mouse[1]) * k * 0.35;
     state.mouseOn += (state.mouseOnTarget - state.mouseOn) * k * 0.2;
     gl.uniform2f(U.uRes, canvas.width, canvas.height);
-    gl.uniform1f(U.uTime, (now - t0) / 1000);
+    gl.uniform1f(U.uTime, o.time ?? (now - t0) / 1000);
     gl.uniform2f(U.uMouse, state.mouse[0], state.mouse[1]);
     gl.uniform1f(U.uMouseOn, state.mouseOn);
     gl.uniform1f(U.uForm, state.form);
@@ -319,7 +321,7 @@ export function createLiquidMark(canvas, opts) {
     gl.uniform1f(U.uScale, state.scale);
     gl.uniform1f(U.uAA, o.aa);
     gl.uniform1f(U.uAAThreshold, o.aaThreshold);
-    const time = (now - t0) / 1000;
+    const time = o.time ?? (now - t0) / 1000;
     gl.uniform2f(U.uRot, o.yaw + state.mouse[0] * 0.05 * state.mouseOn + Math.sin(time * 0.31) * 0.06, o.pitch - state.mouse[1] * 0.04 * state.mouseOn + Math.sin(time * 0.23) * 0.03);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);

@@ -51,6 +51,9 @@ const onScroll = () => {
   if (!nav.classList.contains('is-open') && triggers.every((b) => b.getAttribute('aria-expanded') !== 'true')) {
     nav.classList.toggle('is-hidden', y > lastY && y > 600);
   }
+  // A floating widget (chat launcher) can step aside while the reader scrolls down, and return on pause or scroll-up.
+  if (y > lastY + 2) { document.body.classList.add('is-scrolling-down'); clearTimeout(onScroll.t); onScroll.t = setTimeout(() => document.body.classList.remove('is-scrolling-down'), 1200); }
+  else if (y < lastY - 2) document.body.classList.remove('is-scrolling-down');
   lastY = y;
   document.body.classList.toggle('is-past-hero', y > window.innerHeight * 0.85); // e.g. to delay a chat widget's teaser
   const probe = nav.getBoundingClientRect().bottom + 2;
@@ -146,12 +149,21 @@ if (cases && !RM && window.innerWidth > 820) {
   $('[data-cases-track]', cases).style.cssText = 'overflow-x:auto;scroll-snap-type:x mandatory;width:auto;padding-bottom:1rem';
 }
 
+// Heavy 3D below the fold initialises when the page is idle after the intro, or as soon as it comes near,
+// whichever is first, so shader compilation never lands in the middle of a scroll.
+function soon(el, fn, rootMargin = '600px') {
+  let done = false;
+  const run = () => { if (done) return; done = true; io.disconnect(); fn(); };
+  const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) run(); }, { rootMargin });
+  io.observe(el);
+  const idle = () => setTimeout(() => (window.requestIdleCallback ? requestIdleCallback(run, { timeout: 3000 }) : run()), 4500);
+  if (document.readyState === 'complete') idle(); else window.addEventListener('load', idle, { once: true });
+}
+
 // ---------- Integrations: 3D hub, loaded only when near the viewport ----------
 const integ = $('[data-integ]');
 if (integ) {
-  const io = new IntersectionObserver(async ([e]) => {
-    if (!e.isIntersecting) return;
-    io.disconnect();
+  soon(integ, async () => {
     const { createOrbitHub, shapesFromSvg } = await import('./recipes/orbit-hub.js');
     const items = $$('[data-integ-list] li', integ);
     // The brand mark, extruded in polished metal (falls back to a sphere if the SVG is missing).
@@ -166,23 +178,19 @@ if (integ) {
       li.addEventListener('pointerleave', () => { hub.highlight(-1); li.classList.remove('is-hot'); });
     });
     window.__orbit = hub;
-  }, { rootMargin: '300px' });
-  io.observe(integ);
+  });
 }
 
 // ---------- Closing CTA: droplets of metal drift behind the headline ----------
 const ctaCanvas = $('[data-liquid-cta]');
 if (mark && ctaCanvas && !RM) {
-  const io = new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting) return;
-    io.disconnect();
+  soon(ctaCanvas, () => {
     // The droplets gather beneath the call to action, never behind the words.
-    const cta = createLiquidMark(ctaCanvas, { sdf: mark.sdf, glyphRect: mark.glyphRect, aspect: mark.aspect, sdfSize: mark.sdfSize, rangeTexels: mark.sdfRangeTexels, offset: [0, -2.15], narrowOffset: [0, -2.6], height: 1.25, exposure: 1.0, maxDpr: 1.5, supersample: 1, yaw: -0.2 });
+    const cta = createLiquidMark(ctaCanvas, { sdf: mark.sdf, glyphRect: mark.glyphRect, aspect: mark.aspect, sdfSize: mark.sdfSize, rangeTexels: mark.sdfRangeTexels, offset: [0, -2.05], narrowOffset: [0, -2.5], height: 1.55, exposure: 1.3, maxDpr: 1.5, supersample: 1, yaw: -0.2 });
     cta?.form(0);
     // As the section scrolls through, the droplets begin to gather into the mark.
     ScrollTrigger.create({ trigger: '.cta', start: 'top 75%', end: 'bottom bottom', scrub: true, onUpdate: (s) => cta?.form(s.progress) });
-  }, { rootMargin: '200px' });
-  io.observe(ctaCanvas);
+  });
 }
 
 // Third-party embeds sometimes inject images without alt text; give them an accessible name.

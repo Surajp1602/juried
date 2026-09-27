@@ -111,12 +111,13 @@ claude plugin eval . --scaffold --runs 3 --no-publish --allow-tools Write Edit B
 The first build: an unofficial concept redesign of an enterprise-AI company's homepage, from its URL and
 one sentence.
 
-- **Deterministic gates: 23/23 on real hardware** (Chrome with a GPU): 68–79 fps desktop and 97–112 fps
-  mobile while scrolling, first-screen LCP 0.6–1.2s, CLS ≤ 0.006, no serious accessibility violations, and all
-  61 links of the original homepage retained.
-- **Vision jury: 7.1 → 7.2 (pass)** across two rounds, each round's fixes taken from the juror's
+- **Deterministic gates: 23/23 on real hardware** (Chrome with a GPU) in every round since the first: 62–79 fps
+  desktop and 96–112 fps mobile while scrolling, first-screen LCP 0.6–1.2s, CLS ≤ 0.006, no serious
+  accessibility violations, and all 61 links of the original homepage retained.
+- **Vision jury: 7.1 → 7.2 → 7.3 (pass)** across three rounds, each round's fixes taken from the juror's
   screenshot-specific notes (jagged edges on the 3D mark, a chat widget covering copy, film captions over bright
-  metal, a pinned gallery taller than the screen).
+  metal, a pinned gallery taller than the screen, stat figures with a gap after every "1", a deployment diagram
+  of unconnected boxes).
 - **Calibration found a blind spot in its own grader.** The first blind run caught 4 of 5 mutants but scored the
   build with Arial swapped in almost the same as the real one (6.7 vs 6.9). The juror rubric gained an explicit
   typography check; the re-run caught 5/5, and the real build's score did not move.

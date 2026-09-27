@@ -47,14 +47,14 @@ export function countUp(el) {
   const obj = { v: 0 };
   // The real value stays in the DOM until the number scrolls into view (screenshots, crawlers and no-JS all
   // see it). When counting starts, the box is locked to the final width so nothing around it shifts.
-  el.style.fontVariantNumeric = 'tabular-nums';
   const io = new IntersectionObserver(([e]) => {
     if (!e.isIntersecting) return;
     io.disconnect();
     const w = el.getBoundingClientRect().width;
     if (getComputedStyle(el).display === 'inline') el.style.display = 'inline-block';
     el.style.minWidth = `${Math.ceil(w)}px`;
-    gsap.to(obj, { v: target, duration: 0.9, ease: 'power3.out', onUpdate: () => { el.textContent = fmt(obj.v); }, onComplete: () => { el.textContent = raw; } });
+    el.style.fontVariantNumeric = 'tabular-nums'; // steady digits while counting; proportional once settled
+    gsap.to(obj, { v: target, duration: 0.9, ease: 'power3.out', onUpdate: () => { el.textContent = fmt(obj.v); }, onComplete: () => { el.textContent = raw; el.style.fontVariantNumeric = ''; } });
   }, { threshold: 0.6 });
   io.observe(el);
 }
