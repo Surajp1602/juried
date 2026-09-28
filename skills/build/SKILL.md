@@ -84,6 +84,10 @@ content. Run the anti-template checklist in the reference before moving on.
 1. Logo → 3D: `node tools/brand.mjs logo <logo-file-or-url> --name wordmark` for the full logo (navigation
    and footer), and `--name mark` for the symbol the hero pours into (add `--crop x0,y0,x1,y1` to cut the
    symbol out of a combined logo; `--invert` for light-on-dark logo files).
+   A logo traced from a PNG gets rounded, lumpy ends and clipped corners. Prefer an SVG. If only a raster
+   exists, render the traced wordmark next to the original at full size and at navigation size (about 100px
+   wide), and redraw any straight-edged letter (F, E, T, L, I) as clean geometry with the same stroke widths.
+   Visitors notice a wrong letter in a logo before anything else.
 2. The template page already wires every recipe (liquid mark hero, scroll-scrubbed film, pinned gallery
    with living media, orbit hub, tabs, demos, count-ups, marquee). Replace every `{{slot}}` with researched
    content, restyle the tokens at the top of `src/styles.css` (palette, fonts), and reorder, remove or add
