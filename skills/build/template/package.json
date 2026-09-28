@@ -13,6 +13,7 @@
     "assets:smoke": "node tools/hf.mjs smoke",
     "assets:dry": "node tools/hf.mjs run juried/asset-plan.json --dry-run",
     "assets": "node tools/hf.mjs run juried/asset-plan.json",
+    "media:import": "node tools/import-media.mjs",
     "media": "node tools/film.mjs all",
     "jury": "vite build && node tools/jury/capture.mjs",
     "jury:quick": "vite build && node tools/jury/capture.mjs --quick",

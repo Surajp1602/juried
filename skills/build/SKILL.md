@@ -1,6 +1,6 @@
 ---
 name: build
-description: Turns a one-sentence request into a cinematic, award-level 3D marketing website. It researches the company or product, extracts the real brand, writes an art direction, generates photography and film with Higgsfield, builds with real-time WebGL and scroll choreography, and keeps iterating until an independent, calibrated vision jury scores it 7+/10. Use whenever someone asks to create, design, redesign or "make" a website, landing page or homepage for a company, product, brand or event, even when the request is vague or comes from a non-developer.
+description: Turns a one-sentence request into a cinematic, award-level 3D marketing website. It researches the company or product, extracts the real brand, writes an art direction, uses the person's own photos and video or generates them with Higgsfield, builds with real-time WebGL and scroll choreography, and keeps iterating until an independent, calibrated vision jury scores it 7+/10. Use whenever someone asks to create, design, redesign or "make" a website, landing page or homepage for a company, product, brand or event, even when the request is vague or comes from a non-developer.
 argument-hint: "[company, URL or one-sentence idea]"
 ---
 
@@ -34,8 +34,9 @@ All paths below are relative to the project folder unless they start with `${CLA
 
 ## Talking to a non-developer
 
-- Ask at most one round of questions, and only if the subject is unknown (no company, product or URL).
-  Otherwise decide and state your assumptions in one line.
+- Ask at most one round of questions: about the subject if it is unknown (no company, product or URL), and
+  about photos and video if they have not said (Phase 0, step 4). Otherwise decide and state your
+  assumptions in one line.
 - Make a task list with the six phases below so they can follow along.
 - Report in plain language: what you made, what it cost, what the jury said. No stack traces.
 - When something needs their action (a key, running one command on their own machine), give the exact
@@ -52,6 +53,17 @@ All paths below are relative to the project folder unless they start with `${CLA
      provides. Tell them how to add a key later (`doctor` prints the exact command for their OS).
    - Key present but `api.higgsfield.ai` unreachable from here: continue; in Phase 3 hand them one command
      to run on their own machine.
+4. Decide where the photos and film come from, and say it in one line:
+   - **They gave or mentioned their own** (a folder, attachments, a product shoot, an earlier Juried
+     project): use them. Higgsfield only fills gaps the brief still needs.
+   - **They have not said:** ask once, in the same round as any other question: "Do you have your own
+     photos or videos for the site? Tell me the folder. If not, I'll create a matched set with Higgsfield
+     and show you the cost before anything is spent." Do not wait for the answer: carry on with setup,
+     research and direction, because it is only needed in Phase 3. If Phase 3 arrives with no answer (a
+     scheduled or unattended run), use Higgsfield when a key is available.
+   - **No own media and a Higgsfield key:** generate everything in Phase 3.
+   - **No own media and no key:** build with real-time 3D and typography. Tell them they can add photos
+     or a key later and you will rebuild the media sections.
 
 ## Phase 1: Research (read `references/research.md`)
 
@@ -69,19 +81,21 @@ content. Run the anti-template checklist in the reference before moving on.
 
 ## Phase 3: Film (read `references/higgsfield.md`)
 
-**If the person gives you their own images or video** (a folder, attachments, or the `juried/raw` folder of
-an earlier Juried project), use them instead of generating:
-- Copy them into `juried/raw/` and look at every file: read each image, and extract a few frames from each clip
-  with ffmpeg.
-- Give each one a role from the brief: film keyframes and clip, content stills, or living loops.
-- Record them in `juried/raw/manifest.json` as `{ "<id>": { "file": "<file name>" } }`, and in the `outputs` of
-  `juried/asset-plan.json`. An earlier Juried project's `juried/raw` already has a manifest; keep it, and read
-  its prompts to see what each file shows.
-- Run `node tools/film.mjs all`.
-- Generate only what is still missing, after showing its cost. If there is no key, leave the gap to the recipe's
-  fallback.
+**Their own photos and video** (from Phase 0, step 4):
+1. `node tools/import-media.mjs "<folder or files>"` copies everything into `juried/raw/`, records it in the
+   manifest (size, duration; an earlier Juried project's prompts are kept) and adds suggested roles to the
+   `outputs` of `juried/asset-plan.json`. The suggestions are: the longest landscape clip becomes the
+   scroll-scrubbed film, other clips become loops, and images become stills.
+2. Look at every file: read each image, and extract a few frames from each clip with ffmpeg. Fix the
+   suggested roles and output names to fit the brief and the page's media slots. Leave out anything off-brand
+   or low quality, and tell the person why.
+3. Gaps the brief still needs (a film, a missing section photo): add only those as `assets` in the plan,
+   with ids that are not already imported. A generated clip can start from one of their photos: set
+   `"refs": { "image_url": "<imported id>" }`. `hf.mjs` never regenerates an imported id. Show the cost with
+   `--dry-run` first. Without a key, the recipe's designed fallback covers the gap.
+4. `node tools/film.mjs all`.
 
-Otherwise:
+**Generating everything with Higgsfield:**
 
 1. Write `juried/asset-plan.json`: 2 film keyframes (start/end), 1 film clip between them, 4–9 editorial
    stills for content sections, and up to 4 short loops. Prompts follow the formula in the reference.

@@ -6,7 +6,8 @@ grades it, and the build keeps iterating until it passes.
 
 ```text
 You:    Build a landing page for acme.com
-Juried: researches Acme → writes an art direction → films a hero sequence and a photo set with Higgsfield
+Juried: researches Acme → writes an art direction → uses your photos and video, or films a hero sequence
+        and a photo set with Higgsfield
         → builds it with real-time WebGL and scroll choreography → puts it in front of a jury → fixes what
         the jury finds → hands you a site that scores 7+/10 on the Awwwards weighting
 ```
@@ -42,7 +43,7 @@ can use them too.
 flowchart LR
   A[One sentence] --> R[Research<br/>site, brand, proof,<br/>every link and embed]
   R --> D[Direction<br/>one big idea,<br/>signature moment,<br/>anti-template checklist]
-  D --> F[Film<br/>Higgsfield stills,<br/>keyframed film, loops]
+  D --> F[Film<br/>your photos and video,<br/>or Higgsfield stills,<br/>film and loops]
   F --> B[Build<br/>WebGL + GSAP recipes,<br/>real content only]
   B --> J{Jury<br/>gates + calibrated<br/>vision juror}
   J -- fixes --> B
@@ -54,7 +55,9 @@ flowchart LR
    redesign loses nothing.
 2. **Direction.** Finds one big idea in the brand itself and turns it into a single signature moment, then
    locks palette, type, grid, motion and a photography "shoot line" into `juried/brief.md`.
-3. **Film.** Plans and budgets the generations (`--dry-run` first), then produces two film keyframes, the film
+3. **Film.** Asks whether you have your own photos or video. If you do, it imports them, looks at every file
+   and gives each a role, and Higgsfield only fills the gaps (it can even animate one of your photos). If you
+   don't, it plans and budgets the generations (`--dry-run` first), then produces two film keyframes, the film
    between them, an editorial photo set, and living loops, all from one consistent shoot. Everything becomes
    web-ready media: short-GOP H.264 plus VP9 for instant scroll-scrubbing, responsive WebP stills, posters.
 4. **Build.** Assembles the page from tested recipes: the brand's real logo as real-time molten metal (a
@@ -133,7 +136,8 @@ one sentence.
 |---|---|
 | `npm run dev` | Live preview at http://localhost:5173 |
 | `npm run doctor` | Checks Node, packages, ffmpeg, browser, Higgsfield key and reachability; prints the exact fix |
-| `npm run assets:dry` / `npm run assets` | Cost estimate, then resumable generation from `juried/asset-plan.json` |
+| `npm run media:import -- <folder>` | Bring your own photos and video: copies them in and suggests a role for each |
+| `npm run assets:dry` / `npm run assets` | Cost estimate, then resumable generation from `juried/asset-plan.json` (never regenerates your own files) |
 | `npm run media` | Encodes generations into web media and writes `public/media/media.json` |
 | `npm run jury` | Production build, then the deterministic gates and contact sheets |
 | `npm run jury:calibrate` | Blind mutant sheets for jury calibration |
@@ -144,9 +148,12 @@ Folder map: `juried/` holds research, brief, asset plan, brand geometry, raw gen
 ## Requirements
 
 - Node.js 20.19+ or 22.12+, and Google Chrome (or `npx playwright install chromium`).
-- Optional: a Higgsfield API key for photography and film. A typical site (2 keyframes, an 8-second film,
-  9 stills, 4 loops) estimates about $9 of API usage, shown before anything is spent. Without a key, sites use
-  real-time 3D, typography and any images you provide.
+- Photos and film, either way:
+  - **Your own:** any folder of images (PNG, JPG, WebP, AVIF, TIFF) and clips (MP4, MOV, WebM). No key needed.
+  - **Higgsfield:** an API key. A typical site (2 keyframes, an 8-second film, 9 stills, 4 loops) estimates
+    about $9, shown before anything is spent.
+  - **Both:** your files are used first, and Higgsfield fills only what's missing.
+  - **Neither:** the site uses real-time 3D and typography.
 
 ## Principles
 

@@ -18,7 +18,8 @@ Then explain the result in plain words and fix what you can:
 - **Node.js too old or missing:** ask them to install the LTS version from https://nodejs.org, then open a
   new terminal and restart Claude Code.
 - **No browser:** Google Chrome is enough. Otherwise, a project will run `npx playwright install chromium`.
-- **Higgsfield key missing:** generation is optional; the site still gets real-time 3D and typography.
+- **Higgsfield key missing:** generation is optional. Builds can use their own photos and video, and
+  otherwise get real-time 3D and typography.
   To enable AI photography and film, they create an API key in their Higgsfield account and store it
   themselves, never in chat:
   - Windows PowerShell: `setx HF_API_KEY_ID "<key id>"` then `setx HF_API_KEY_SECRET "<secret>"`
