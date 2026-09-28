@@ -34,13 +34,43 @@ All paths below are relative to the project folder unless they start with `${CLA
 
 ## Talking to a non-developer
 
-- Ask at most one round of questions: about the subject if it is unknown (no company, product or URL), and
-  about photos and video if they have not said (Phase 0, step 4). Otherwise decide and state your
-  assumptions in one line.
+- Always ask the media question below, first. Ask about the subject only if it is unknown (no company,
+  product or URL). Otherwise decide and state your assumptions in one line.
 - Make a task list with the six phases below so they can follow along.
 - Report in plain language: what you made, what it cost, what the jury said. No stack traces.
 - When something needs their action (a key, running one command on their own machine), give the exact
   command, one line, and say why.
+
+## Before anything else: ask where the photos and video come from (always)
+
+Ask this on every build, before you start work, even when the request already mentions a folder. Use the
+AskUserQuestion tool (a multiple-choice prompt) and wait for the answer:
+
+- Question: "Where should the site's photos and video come from?" (header: "Media")
+- Options, in this order:
+  1. **"My own files, in a folder"**: "I'll use them and fill any gaps with Higgsfield, showing the cost first."
+  2. **"I'll add my own files soon"**: "I'll set up and research now, and wait for your folder before the
+     media step."
+  3. **"Generate them with Higgsfield"**: "AI photography and film made for this brand, cost shown before
+     anything is spent."
+  4. **"No photos or video"**: "Real-time 3D, typography and motion only."
+
+If the request already names a folder, put it in option 1's label: "Use my files in <folder>".
+
+Then:
+- **Own files:** if they did not give the path, ask for it. Check that the folder exists and contains images
+  or clips. If it does not, say so and ask again.
+- **Adding them soon:** carry on with Phases 0–2. Before Phase 3, stop and ask for the folder; do not
+  generate anything in the meantime.
+- **Higgsfield:** if `doctor` finds no key, give the one-line command to store it (never in chat). Carry on
+  with Phases 0–2, and generate in Phase 3 once the key works. If they would rather not add a key, switch to
+  no photos or video.
+- **No photos or video:** skip Phase 3. Every recipe has a designed fallback (real-time 3D, typography).
+
+Record the choice in one line at the top of `juried/brief.md` ("Media: own files in …", "Media: Higgsfield",
+"Media: none"). If you truly cannot ask (no AskUserQuestion tool, or an unattended run with no one to
+answer), ask in plain text, carry on with Phases 0–2, and before Phase 3 use Higgsfield if a key works,
+otherwise no photos or video.
 
 ## Phase 0: Set up (≈2 min)
 
@@ -53,17 +83,7 @@ All paths below are relative to the project folder unless they start with `${CLA
      provides. Tell them how to add a key later (`doctor` prints the exact command for their OS).
    - Key present but `api.higgsfield.ai` unreachable from here: continue; in Phase 3 hand them one command
      to run on their own machine.
-4. Decide where the photos and film come from, and say it in one line:
-   - **They gave or mentioned their own** (a folder, attachments, a product shoot, an earlier Juried
-     project): use them. Higgsfield only fills gaps the brief still needs.
-   - **They have not said:** ask once, in the same round as any other question: "Do you have your own
-     photos or videos for the site? Tell me the folder. If not, I'll create a matched set with Higgsfield
-     and show you the cost before anything is spent." Do not wait for the answer: carry on with setup,
-     research and direction, because it is only needed in Phase 3. If Phase 3 arrives with no answer (a
-     scheduled or unattended run), use Higgsfield when a key is available.
-   - **No own media and a Higgsfield key:** generate everything in Phase 3.
-   - **No own media and no key:** build with real-time 3D and typography. Tell them they can add photos
-     or a key later and you will rebuild the media sections.
+4. Photos and video: follow the answer to the media question above.
 5. Inspiration. If they named or linked a site they like ("make it feel like linear.app", a URL,
    screenshots), that site leads the references and shapes the direction. If they did not, do not ask:
    choose 3–5 references yourself in Phase 1, as usual.
@@ -93,7 +113,7 @@ content. Run the anti-template checklist in the reference before moving on.
 
 ## Phase 3: Film (read `references/higgsfield.md`)
 
-**Their own photos and video** (from Phase 0, step 4):
+**Their own photos and video** (the media question's first two answers):
 1. `node tools/import-media.mjs "<folder or files>"` copies everything into `juried/raw/`, records it in the
    manifest (size, duration; an earlier Juried project's prompts are kept) and adds suggested roles to the
    `outputs` of `juried/asset-plan.json`. The suggestions are: the longest landscape clip becomes the

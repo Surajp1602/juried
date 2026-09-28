@@ -58,7 +58,8 @@ flowchart LR
    redesign loses nothing.
 2. **Direction.** Finds one big idea in the brand itself and turns it into a single signature moment, then
    locks palette, type, grid, motion and a photography "shoot line" into `juried/brief.md`.
-3. **Film.** Asks whether you have your own photos or video. If you do, it imports them, looks at every file
+3. **Film.** Before any work starts, it always asks where the photos and video should come from: your own
+   folder, files you'll add soon, Higgsfield, or none. With your own files, it imports them, looks at every file
    and gives each a role, and Higgsfield only fills the gaps (it can even animate one of your photos). If you
    don't, it plans and budgets the generations (`--dry-run` first), then produces two film keyframes, the film
    between them, an editorial photo set, and living loops, all from one consistent shoot. Everything becomes
