@@ -69,6 +69,20 @@ content. Run the anti-template checklist in the reference before moving on.
 
 ## Phase 3: Film (read `references/higgsfield.md`)
 
+**If the person gives you their own images or video** (a folder, attachments, or the `juried/raw` folder of
+an earlier Juried project), use them instead of generating:
+- Copy them into `juried/raw/` and look at every file: read each image, and extract a few frames from each clip
+  with ffmpeg.
+- Give each one a role from the brief: film keyframes and clip, content stills, or living loops.
+- Record them in `juried/raw/manifest.json` as `{ "<id>": { "file": "<file name>" } }`, and in the `outputs` of
+  `juried/asset-plan.json`. An earlier Juried project's `juried/raw` already has a manifest; keep it, and read
+  its prompts to see what each file shows.
+- Run `node tools/film.mjs all`.
+- Generate only what is still missing, after showing its cost. If there is no key, leave the gap to the recipe's
+  fallback.
+
+Otherwise:
+
 1. Write `juried/asset-plan.json`: 2 film keyframes (start/end), 1 film clip between them, 4–9 editorial
    stills for content sections, and up to 4 short loops. Prompts follow the formula in the reference.
 2. `node tools/hf.mjs run juried/asset-plan.json --dry-run` shows the cost. Within budget: run it without
