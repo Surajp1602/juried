@@ -91,6 +91,7 @@ the judge.
 | Every canvas and video actually painted | pixel variance above threshold |
 | Original links retained | every link from the original homepage still reachable |
 | No template leftovers | no `{{slots}}`, TODO, or lorem ipsum anywhere visible |
+| Framework: React app | the page is rendered by React from the template; a hand-written HTML page fails |
 
 **Vision jury** (`agents/juror.md`): scores contact sheets against the brief on the Awwwards weighting
 (design 40, usability 30, creativity 20, content 10), names template tells, and returns ranked fixes tied to

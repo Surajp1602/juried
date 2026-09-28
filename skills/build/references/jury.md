@@ -27,6 +27,7 @@ desktop with reduced motion, in Google Chrome when installed (else Playwright's 
 | Every canvas/video painted | pixel std ≥ 3 | a WebGL context that failed, a missing media file, a video that never decoded |
 | Original links retained | all `mustKeepLinks` | a CTA or footer link dropped in the redesign |
 | No template leftovers | no `{{`, `TODO`, lorem ipsum in visible text | an unreplaced copy slot |
+| Framework: React app | `react` + `react-dom` in package.json, page rendered by React into `#root` | a hand-written HTML page instead of the template |
 
 Environment-caused failures are reported, not hidden. A sandbox without a GPU renders WebGL in software:
 fps and mobile LCP will fail there and must be re-checked on a real machine (`npm run jury` on the person's

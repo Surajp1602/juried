@@ -18,6 +18,9 @@ All paths below are relative to the project folder unless they start with `${CLA
 
 ## Non-negotiables
 
+0. **React only.** Every site is the React 19 + Vite app copied from this skill's `template/` in Phase 0,
+   with one component per section in `src/sections/`. Never write a standalone HTML/CSS/JS page, and never
+   switch stacks. The jury gate `framework: React app` fails any build that React did not render.
 1. **Real content only.** No lorem ipsum, invented statistics, fake testimonials, or logos of clients you
    have not seen on the company's own site. Every number on the page traces to a source in `juried/research.json`.
 2. **Keep the function.** Redesigning an existing site means every link, CTA, form, embed and script on the

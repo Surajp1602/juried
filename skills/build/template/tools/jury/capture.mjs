@@ -152,11 +152,14 @@ async function runViewport(browser, url, vp) {
     // Unreplaced copy slots, TODOs and lorem ipsum anywhere a visitor could read them.
     const text = document.body.innerText || '';
     const leftovers = [...text.matchAll(/\{\{[^}]{0,40}\}?\}?|\bTODO\b|\bTBD\b|lorem ipsum|dolor sit amet/gi)].slice(0, 8).map((m) => m[0]);
-    return { overflowX: document.documentElement.scrollWidth - innerWidth, metrics: window.__metrics, links: [...document.querySelectorAll('a[href]')].map((a) => a.href), leftovers };
+    // Juried sites are React apps: the page must be rendered by React into #root.
+    const root = document.getElementById('root');
+    const react = !!root && Object.keys(root).some((k) => k.startsWith('__reactContainer')) && root.childElementCount > 0;
+    return { overflowX: document.documentElement.scrollWidth - innerWidth, metrics: window.__metrics, links: [...document.querySelectorAll('a[href]')].map((a) => a.href), leftovers, react };
   });
 
   await context.close();
-  return { viewport: vp.name, url, shots, errors, failed: [...new Set(failed)], paint, fps, axe, overflowX: layout.overflowX, metrics: layout.metrics, links: [...new Set(layout.links)], leftovers: layout.leftovers };
+  return { viewport: vp.name, url, shots, errors, failed: [...new Set(failed)], paint, fps, axe, overflowX: layout.overflowX, metrics: layout.metrics, links: [...new Set(layout.links)], leftovers: layout.leftovers, react: layout.react };
 }
 
 async function contactSheet(browser, results) {
@@ -189,6 +192,13 @@ function gate(results) {
     if (!v.includes('reduced')) add(`${v}: no template leftovers`, !r.leftovers?.length, r.leftovers);
     const blank = r.paint.filter((p) => p.visible && p.std < GATES.minPaintStd);
     add(`${v}: every canvas/video painted`, blank.length === 0, blank.map((b) => `${b.name} std=${b.std?.toFixed(1)}`));
+  }
+  // Framework: a Juried build must be the React app from the template, never a hand-written HTML page.
+  if (!EXTERNAL) {
+    const pkg = fs.existsSync('package.json') ? JSON.parse(fs.readFileSync('package.json', 'utf8')) : {};
+    const hasReact = !!(pkg.dependencies?.react && pkg.dependencies?.['react-dom']);
+    const notReact = results.filter((r) => !r.react).map((r) => r.viewport);
+    add('framework: React app', hasReact && notReact.length === 0, hasReact ? (notReact.length ? `not rendered by React in: ${notReact.join(', ')}` : 'React renders #root') : 'package.json has no react / react-dom dependency');
   }
   // Functionality parity: every link the original homepage offered must still be reachable.
   const req = fs.existsSync('juried/research.json') ? JSON.parse(fs.readFileSync('juried/research.json', 'utf8')).mustKeepLinks || [] : [];
