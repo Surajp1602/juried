@@ -131,10 +131,14 @@ content. Run the anti-template checklist in the reference before moving on.
    `0 0 <width> <height>`, not the symbol's own viewBox. An offset outer viewBox shifts the logo and crops
    its edges, which turns stems into hairlines at navigation size. Visitors notice a wrong letter in a logo
    before anything else.
-2. The template page already wires every recipe (liquid mark hero, scroll-scrubbed film, pinned gallery
-   with living media, orbit hub, tabs, demos, count-ups, marquee). Replace every `{{slot}}` with researched
-   content, restyle the tokens at the top of `src/styles.css` (palette, fonts), and reorder, remove or add
-   sections to match the brief's section map. Do not write new WebGL from scratch unless the brief needs
+2. The template is a **React 19 + Vite** app and already wires every recipe (liquid mark hero,
+   scroll-scrubbed film, pinned gallery with living media, orbit hub, tabs, demos, count-ups, marquee).
+   Each section is a component in `src/sections/`, and `src/App.jsx` sets their order. Replace every
+   `{{placeholder}}` in the components and in the head of `index.html` with researched content. Restyle
+   the tokens at the top of `src/styles.css` (palette, fonts), and reorder, remove or add sections in
+   `App.jsx` to match the brief's section map. Keep class names and data attributes: `src/page.js` finds
+   elements by them. Build in React, and never replace it with a hand-written static HTML page. If the
+   person asks for Next.js, say this template is React on Vite and offer to port the finished site. Do not write new WebGL from scratch unless the brief needs
    something the recipes cannot do.
 3. `npm run build` must succeed with no errors.
 

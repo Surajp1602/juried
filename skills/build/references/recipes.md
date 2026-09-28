@@ -1,14 +1,26 @@
 # Phase 4: Build with recipes
 
-The template (`index.html`, `src/main.js`, `src/styles.css`) is a complete, jury-tested page skeleton:
+The template is a React 19 app on Vite and a complete, jury-tested page skeleton:
 announcement bar, navigation with mega menus, liquid-mark hero with a fact rail, logo marquee, a
 scroll-scrubbed film chapter, capability tabs, a pinned gallery of living photographs, a foundation grid,
 an orbit hub for integrations, deployment tabs with a diagram, product demos, FAQ, a closing CTA with
 liquid droplets, and a full footer. Every copy slot is marked `{{…}}`; the jury fails any build that still
 contains `{{`, `TODO` or lorem ipsum.
 
+How it is organised:
+- `src/sections/*.jsx`: one component per section (Header, Hero, Clients, Film, Caps, Cases, Found,
+  Integ, Flows, Faq, Cta, News, Footer). Placeholders appear as `{"{{hero__title}}"}` in text and
+  `href="{{url}}"` in attributes; replace the whole expression with the real copy.
+- `src/App.jsx`: the order of sections. Reorder, remove or duplicate them here. Turn repeated markup (cards,
+  logos, FAQ items) into arrays mapped to elements when that makes the content easier to edit.
+- `src/page.js`: the cinematic layer (Lenis, GSAP, WebGL, film, pinned gallery, tabs, counters). It is
+  framework-free and runs once after React renders, finding elements by their data attributes.
+- `index.html`: the head (title, description, Open Graph, noindex for concepts) and the original site's
+  third-party embeds, which must stay plain `<script>` tags there (React does not execute scripts in JSX).
+- `src/styles.css`: tokens and styles, class names unchanged.
+
 Adapt it to the brief: reorder, remove, or duplicate sections; rename tokens; replace the copy with the
-researched content. Keep the data attributes, because `src/main.js` wires recipes by them. Recipes live in
+researched content. Keep the class names and data attributes, because `src/page.js` wires recipes by them. Recipes live in
 `src/recipes/` and each one has a designed fallback, so the page is complete even with no generated media.
 
 ## Hero: liquid mark (`liquid-mark.js`)
@@ -70,7 +82,7 @@ loop with that name, the loop plays while it is in view.
 </article>
 ```
 
-## Pinned gallery (in `main.js`)
+## Pinned gallery (in `page.js`)
 
 `[data-cases]` with a `[data-cases-track]` scrolls horizontally while pinned (desktop), and becomes a
 swipeable, snap-scrolling row on mobile. Pin type is `transform`, so it never registers as layout shift.
@@ -105,8 +117,8 @@ when their tab is selected. Use the company's real flows (from research), never 
 
 ## Page conventions
 
-- `window.__ready = true` at the end of `main.js` (the jury waits for it).
-- Brand fonts via `@fontsource-variable/<family>` imports in `main.js`; never a render-blocking Google Fonts link.
+- `window.__ready = true` at the end of `initPage()` in `page.js` (the jury waits for it).
+- Brand fonts via `@fontsource-variable/<family>` imports at the top of `styles.css`; never a render-blocking Google Fonts link.
 - Headings use `data-split` for a single line-reveal on first view; body copy is never hidden by animation.
 - Dark chapters get the film-grain overlay; light chapters stay clean.
 - Keep third-party embeds from the original (chat widgets, schedulers) exactly as they were, including

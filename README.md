@@ -63,7 +63,8 @@ flowchart LR
    don't, it plans and budgets the generations (`--dry-run` first), then produces two film keyframes, the film
    between them, an editorial photo set, and living loops, all from one consistent shoot. Everything becomes
    web-ready media: short-GOP H.264 plus VP9 for instant scroll-scrubbing, responsive WebP stills, posters.
-4. **Build.** Assembles the page from tested recipes: the brand's real logo as real-time molten metal (a
+4. **Build.** A React 19 app on Vite, with one component per section and all the copy in the components.
+   It assembles the page from tested recipes: the brand's real logo as real-time molten metal (a
    signed-distance-field raymarcher), a scroll-scrubbed film chapter, a pinned gallery of living photographs,
    an orbit hub with the logo extruded in polished metal, interface demos, and accessible tabs and counters.
    Every recipe has a designed fallback and a reduced-motion path.
