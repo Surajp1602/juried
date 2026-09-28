@@ -1,6 +1,6 @@
 ---
 name: build
-description: Turns a one-sentence request into a cinematic, award-level 3D marketing website. It researches the company or product, extracts the real brand, writes an art direction, uses the person's own photos and video or generates them with Higgsfield, builds with real-time WebGL and scroll choreography, and keeps iterating until an independent, calibrated vision jury scores it 7+/10. Use whenever someone asks to create, design, redesign or "make" a website, landing page or homepage for a company, product, brand or event, even when the request is vague or comes from a non-developer.
+description: Turns a one-sentence request into a cinematic, award-level 3D marketing website. It researches the company or product and any site the person names as inspiration, extracts the real brand, writes an art direction, uses the person's own photos and video or generates them with Higgsfield, builds with real-time WebGL and scroll choreography, and keeps iterating until an independent, calibrated vision jury scores it 7+/10. Use whenever someone asks to create, design, redesign or "make" a website, landing page or homepage for a company, product, brand or event, even when the request is vague or comes from a non-developer.
 argument-hint: "[company, URL or one-sentence idea]"
 ---
 
@@ -64,8 +64,16 @@ All paths below are relative to the project folder unless they start with `${CLA
    - **No own media and a Higgsfield key:** generate everything in Phase 3.
    - **No own media and no key:** build with real-time 3D and typography. Tell them they can add photos
      or a key later and you will rebuild the media sections.
+5. Inspiration. If they named or linked a site they like ("make it feel like linear.app", a URL,
+   screenshots), that site leads the references and shapes the direction. If they did not, do not ask:
+   choose 3–5 references yourself in Phase 1, as usual.
 
 ## Phase 1: Research (read `references/research.md`)
+
+If they gave inspiration sites, study those first: `node tools/reference.mjs <url> [<url> ...]` renders each
+one at desktop and mobile and measures it. It writes contact sheets and `facts.json` (type, palette, width,
+rhythm, motion and 3D stack) to `juried/references/<site>/`. Look at both sheets. For screenshots they
+attached, look at those directly.
 
 Produce `juried/research.json` (schema in the reference) and `juried/dossier.md` (one page):
 the company's positioning in its own words, audience, offer, proof (numbers, clients, certifications), tone,
@@ -73,6 +81,10 @@ the brand (colours, type, logo files), the complete content and link inventory o
 embed or form that must survive, and 3–5 reference sites worth learning from, with what to borrow from each.
 
 ## Phase 2: Direction (read `references/direction.md`)
+
+With an inspiration site, the brief gets an **Inspired by** section: the 3–6 qualities you are borrowing,
+each specific and measured (from `facts.json` and the sheets), and what stays the subject's own. Inspiration
+means borrowing qualities, never copying: see the rules in the reference.
 
 Write `juried/brief.md`: one big idea taken from the brand's own metaphor, one **signature moment** that
 expresses it in 3D (the hero), the film storyboard (first frame → last frame), palette tokens, type pairing,

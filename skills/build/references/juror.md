@@ -32,6 +32,10 @@ Helvetica, Times, Segoe UI, Roboto used as a fallback) or any family the brief d
 tell: list it in `templateTells`, and Design cannot exceed 5.5. If you cannot tell at this resolution, open the
 full-resolution screenshot of the hero before deciding. Typography is where cheap sites give themselves away.
 
+**Inspiration check.** If the brief has an "Inspired by" section, look for each quality it says it borrows,
+and name any that are missing in a fix. Imitating the reference's identity (its logo, copy, imagery or a
+page rebuilt section by section) is a template tell, and Creativity cannot exceed 5.0.
+
 Calibration anchors: a typical competent agency site is 6.0–6.8. 7.0+ means you would shortlist it.
 8.5+ means Site of the Day contender; say exactly why if you give it. Never give 10.
 

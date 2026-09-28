@@ -50,8 +50,11 @@ flowchart LR
   J -- pass: 7.0+ --> H[Hand-off<br/>preview, cost, publish]
 ```
 
-1. **Research.** Reads the company's own site (positioning, proof, voice, colours, fonts, logo), outside
-   coverage, and 3–5 genuinely excellent reference sites. Inventories every link, CTA, form and embed so the
+1. **Research.** Reads the company's own site (positioning, proof, voice, colours, fonts, logo) and outside
+   coverage. If you name a site you'd like it to feel like ("make it feel like linear.app"), it renders that
+   site in a real browser, measures its type, palette, rhythm and motion stack, and uses it as the lead
+   reference. It borrows qualities, never its logo, copy, images or code. Otherwise it picks 3–5 genuinely
+   excellent reference sites itself. Inventories every link, CTA, form and embed so the
    redesign loses nothing.
 2. **Direction.** Finds one big idea in the brand itself and turns it into a single signature moment, then
    locks palette, type, grid, motion and a photography "shoot line" into `juried/brief.md`.
@@ -136,6 +139,7 @@ one sentence.
 |---|---|
 | `npm run dev` | Live preview at http://localhost:5173 |
 | `npm run doctor` | Checks Node, packages, ffmpeg, browser, Higgsfield key and reachability; prints the exact fix |
+| `npm run reference -- <url>` | Study an inspiration site: contact sheets plus measured type, palette and motion stack |
 | `npm run media:import -- <folder>` | Bring your own photos and video: copies them in and suggests a role for each |
 | `npm run assets:dry` / `npm run assets` | Cost estimate, then resumable generation from `juried/asset-plan.json` (never regenerates your own files) |
 | `npm run media` | Encodes generations into web media and writes `public/media/media.json` |

@@ -9,6 +9,7 @@
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "doctor": "node tools/doctor.mjs",
+    "reference": "node tools/reference.mjs",
     "assets:check": "node tools/hf.mjs check",
     "assets:smoke": "node tools/hf.mjs smoke",
     "assets:dry": "node tools/hf.mjs run juried/asset-plan.json --dry-run",

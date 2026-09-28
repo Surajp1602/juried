@@ -12,7 +12,9 @@ does so the redesign loses nothing. Time box: 15 minutes of tool calls.
 2. **Structured data.** JSON-LD blocks (`Organization`, `FAQPage`, `Product`) give clean facts and FAQs.
 3. **The outside view.** Web search for recent news, funding, notable customers, reviews, and the
    category's language ("agentic AI platform", "neobank", "boutique hotel").
-4. **Reference sites.** Find 3–5 sites that are genuinely excellent (Awwwards Site of the Day, FWA, Godly,
+4. **Reference sites.** Sites the person named as inspiration come first: study each with
+   `node tools/reference.mjs <url>` and record it with `"source": "person"`. Then, or when they named none,
+   find 3–5 sites that are genuinely excellent (Awwwards Site of the Day, FWA, Godly,
    Land-book, Lapa Ninja, or known studios) either in the same industry or using the technique the brief is
    leaning toward (liquid metal, scroll-scrubbed film, product configurators). For each, write what to borrow:
    a technique, a pacing decision, a typographic move. Never copy a layout or look wholesale.
@@ -54,7 +56,7 @@ to fill the gap.
   "sections": [{ "id": "hero", "heading": "…", "body": "…", "ctas": [{ "label": "…", "href": "…" }] }],
   "embeds": [{ "kind": "chat-widget", "html": "<script src=… data-…></script>", "keep": true }],
   "faq": [{ "q": "…", "a": "…" }],
-  "references": [{ "url": "…", "borrow": "…" }],
+  "references": [{ "url": "…", "source": "person | studio", "borrow": "…" }],
   "mustKeepLinks": ["https://acme.com/contact", "…"]
 }
 ```

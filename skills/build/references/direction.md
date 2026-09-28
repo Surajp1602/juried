@@ -18,6 +18,30 @@ world. Turn that into one visual metaphor that can carry the whole page.
 The signature moment happens once, at the top, and echoes once at the end (the closing CTA). Everything in
 between is calm, editorial and fast to read.
 
+## 1b. When the person gave an inspiration site
+
+Their site leads, but it is inspiration, not a template. In `juried/brief.md`, add an **Inspired by <site>**
+section with two lists.
+
+**What we borrow:** 3–6 qualities, each specific enough to check in a screenshot and measured where
+possible from `juried/references/<site>/facts.json`. Examples:
+- "oversized display type, about 84px at weight 340 with tight tracking";
+- "long dark chapters broken by one light chapter";
+- "a single pinned horizontal gallery";
+- "a 1,350px content width with hairline rules";
+- "one WebGL hero, everything else still".
+
+**What stays ours:** the subject's own logo, colours, typefaces, content and imagery. The big idea still
+comes from the subject's brand (section 1), expressed with the reference's qualities.
+
+Rules:
+- Never reuse the reference's logo, copy, photographs, illustrations, icons or code, and never rebuild its
+  pages section by section. The result must never be mistakable for that site.
+- Colours and type come from the subject's brand. Use the reference's palette or typefaces only when the
+  person asks for them explicitly, and even then keep the subject's logo.
+- If a borrowed quality conflicts with the subject's content or with accessibility, say so in the brief and
+  adapt it.
+
 ## 2. Art direction tokens
 
 - **Palette:** take the brand colours from research. Build 60/30/10: a dominant neutral (ink or paper), a
