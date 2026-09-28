@@ -87,7 +87,10 @@ content. Run the anti-template checklist in the reference before moving on.
    A logo traced from a PNG gets rounded, lumpy ends and clipped corners. Prefer an SVG. If only a raster
    exists, render the traced wordmark next to the original at full size and at navigation size (about 100px
    wide), and redraw any straight-edged letter (F, E, T, L, I) as clean geometry with the same stroke widths.
-   Visitors notice a wrong letter in a logo before anything else.
+   When a page shows the logo through `<svg><use href="#id"/></svg>`, the outer `viewBox` must be
+   `0 0 <width> <height>`, not the symbol's own viewBox. An offset outer viewBox shifts the logo and crops
+   its edges, which turns stems into hairlines at navigation size. Visitors notice a wrong letter in a logo
+   before anything else.
 2. The template page already wires every recipe (liquid mark hero, scroll-scrubbed film, pinned gallery
    with living media, orbit hub, tabs, demos, count-ups, marquee). Replace every `{{slot}}` with researched
    content, restyle the tokens at the top of `src/styles.css` (palette, fonts), and reorder, remove or add
