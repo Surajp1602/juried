@@ -17,14 +17,16 @@ The person may not be technical. Run everything yourself and report in plain lan
 
 ```bash
 RT="${CLAUDE_PLUGIN_DATA:-$HOME/.juried}/jury-runtime"
+# Refresh the tools on every use (the capture imports tools/lib), install packages once.
+mkdir -p "$RT/tools" && cp -r "${CLAUDE_PLUGIN_ROOT}/skills/build/template/tools/jury" "${CLAUDE_PLUGIN_ROOT}/skills/build/template/tools/lib" "$RT/tools/"
 if [ ! -d "$RT/node_modules/playwright" ]; then
-  mkdir -p "$RT/tools" && cp -r "${CLAUDE_PLUGIN_ROOT}/skills/build/template/tools/jury" "$RT/tools/"
   printf '{ "type": "module", "private": true, "dependencies": { "playwright": "^1.63.0", "axe-core": "^4.13.0", "pngjs": "^7.0.0" } }\n' > "$RT/package.json"
   (cd "$RT" && npm install --no-audit --no-fund)
 fi
 ```
 
-(Without the plugin variables, copy `tools/jury` from the Juried build skill's `template` folder instead.)
+(Without the plugin variables, copy `tools/jury` and `tools/lib` from the Juried build skill's `template`
+folder instead.)
 If no browser starts, install Google Chrome or run `npx playwright install chromium` in `$RT`.
 
 ## 2. Capture and gate
@@ -40,7 +42,12 @@ environment problems (no GPU in a sandbox, blocked third-party hosts).
 
 Spawn the `juror` agent (in agents without it, a fresh subagent given the Juried build skill's
 `references/juror.md` as instructions). Give it only `sheet-desktop.png`, `sheet-mobile.png` and, if one
-exists, the brief. Never add your own opinion of the site. It returns JSON scores and ranked fixes.
+exists, the brief. In a Juried project also give it `sheet-priors.png` when the capture wrote one (this
+build beside earlier builds) and the reference sheets in `juried/references/`, so it can judge originality.
+Never add your own opinion of the site. It returns JSON scores and ranked fixes.
+
+In a Juried project the gates include three originality checks (design DNA, not a re-skin of an earlier
+build, not a clone of a reference). They do not run for an outside URL: there is nothing to compare with.
 
 For a high-stakes verdict, calibrate first: in a Juried project run `node tools/jury/mutate.mjs`, have
 the juror score the blind sheets one per subagent, then `node tools/jury/mutate.mjs --score …`.

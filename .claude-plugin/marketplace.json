@@ -4,14 +4,20 @@
     "name": "Suraj Pawar",
     "url": "https://github.com/Surajp1602"
   },
-  "description": "Juried: cinematic 3D websites from one sentence, graded by a calibrated design jury.",
+  "description": "Juried: award-level websites from one sentence, different every time, graded by a calibrated design jury.",
   "plugins": [
     {
       "name": "juried",
       "source": "./",
-      "description": "One sentence in, an award-level 3D marketing site out: research, art direction, Higgsfield film, WebGL recipes, and a calibrated vision jury.",
+      "description": "One sentence in, an award-level marketing site out: research, live inspiration from the design galleries, a design DNA unique to each build, Higgsfield film, and a calibrated vision jury that fails re-skins.",
       "category": "design",
-      "tags": ["website", "3d", "webgl", "design", "jury"]
+      "tags": [
+        "website",
+        "3d",
+        "webgl",
+        "design",
+        "jury"
+      ]
     }
   ]
 }

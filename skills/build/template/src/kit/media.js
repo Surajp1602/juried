@@ -7,13 +7,13 @@ export async function loadMediaManifest(url = '/media/media.json') {
 export function livingMedia(el, manifest) {
   const name = el.dataset.media;
   const entry = manifest[name];
-  const box = el.querySelector('.case__media') || el;
+  const box = el.querySelector('[data-media-box]') || el;
   const img = box.querySelector('img');
   const video = box.querySelector('video');
   if (!entry) { box.classList.add('is-empty'); return; }
   if (img && entry.still) {
     img.srcset = entry.still.widths.map((w) => `/media/${name}-${w}.webp ${w}w`).join(', ');
-    img.sizes = '(max-width: 820px) 84vw, min(42vw, 640px)';
+    img.sizes = el.dataset.sizes || '100vw'; // set data-sizes to the slot's real width in this layout
     img.src = `/media/${name}.jpg`;
     img.decoding = 'async';
     img.loading = 'lazy';

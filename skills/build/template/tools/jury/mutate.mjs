@@ -43,6 +43,16 @@ const MUTANTS = {
           [style*="background-image"] { background-image: none !important; }
           img:not([src$=".svg"]) { visibility: hidden !important; }`,
   },
+  'generic-layout': {
+    // Keeps the type, colours and copy, but flattens every section into the same centred stack: the page
+    // structure of a template. A jury that scores this like the real build cannot see structure at all.
+    attacks: 'creativity',
+    css: `main > *, main > * > * { display: block !important; position: static !important; height: auto !important; min-height: 0 !important; transform: none !important; }
+          main > * { max-width: 960px !important; margin: 0 auto !important; padding: 5rem 1.5rem !important; text-align: center !important; }
+          main * { float: none !important; grid-template-columns: none !important; columns: auto !important; }
+          main [style*="position"], main *:not(img):not(video):not(canvas):not(svg):not(path) { inset: auto !important; }
+          main img, main video, main canvas { position: static !important; width: 100% !important; max-width: 720px !important; height: auto !important; max-height: 360px !important; margin: 1.5rem auto !important; object-fit: cover !important; }`,
+  },
   'cramped-broken': {
     attacks: 'usability',
     css: `section, header, footer { padding: 0.4rem !important; margin: 0 !important; }

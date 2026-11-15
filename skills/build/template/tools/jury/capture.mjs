@@ -7,6 +7,11 @@
 // deterministic gate results (console errors, layout overflow, CLS/LCP, frame rate while scrolling,
 // accessibility violations, whether every canvas/video actually painted, and link parity with the
 // original site). Uses the Chromium Playwright installs (JURIED_CHROME overrides the executable).
+//
+// For a Juried project it also checks originality: the design DNA (juried/dna.json), and the page's measured
+// structure against every earlier Juried build on this computer (a re-skin fails) and against each reference
+// studied for this build (a clone fails). Each run records the build in the history (~/.juried) so the next
+// build can be compared with it; --no-record skips that.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -15,6 +20,9 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import { PNG } from 'pngjs';
+import { FINGERPRINT, similarity } from '../lib/fingerprint.mjs';
+import { checkDna } from '../lib/dna.mjs';
+import { projectId, priorBuilds, recordBuild, buildDir } from '../lib/home.mjs';
 
 const require = createRequire(import.meta.url);
 const argv = process.argv.slice(2);
@@ -82,6 +90,9 @@ async function runViewport(browser, url, vp) {
   if (EXTERNAL) await page.waitForLoadState('load', { timeout: 60000 }).catch(() => {});
   else await page.waitForFunction(() => window.__ready === true, null, { timeout: 60000 }).catch(() => errors.push('page never signalled window.__ready'));
   await page.waitForTimeout(QUICK ? 1500 : 4000);
+
+  // The page's structure, measured once at the top of the desktop render (used by the originality gates).
+  const fingerprint = vp.name === 'desktop' ? await page.evaluate(FINGERPRINT).catch(() => null) : null;
 
   const shots = [];
   await page.evaluate(() => { window.__lcpFrozen = true; }); // LCP = the first screen; scrolling reveals later content
@@ -159,7 +170,7 @@ async function runViewport(browser, url, vp) {
   });
 
   await context.close();
-  return { viewport: vp.name, url, shots, errors, failed: [...new Set(failed)], paint, fps, axe, overflowX: layout.overflowX, metrics: layout.metrics, links: [...new Set(layout.links)], leftovers: layout.leftovers, react: layout.react };
+  return { viewport: vp.name, url, shots, errors, failed: [...new Set(failed)], paint, fps, axe, overflowX: layout.overflowX, metrics: layout.metrics, links: [...new Set(layout.links)], leftovers: layout.leftovers, react: layout.react, fingerprint };
 }
 
 async function contactSheet(browser, results) {
@@ -174,7 +185,42 @@ async function contactSheet(browser, results) {
   await page.close();
 }
 
-function gate(results) {
+// Four desktop stops side by side: a small picture of this build's structure, kept in the history so a later
+// build's juror can be shown what earlier builds looked like.
+async function strip(browser, desktop, file) {
+  const n = desktop.shots.length;
+  const pick = [...new Set([0, Math.floor(n * 0.28), Math.floor(n * 0.55), Math.floor(n * 0.82)])].map((i) => desktop.shots[Math.min(i, n - 1)]);
+  const page = await browser.newPage({ viewport: { width: 1600, height: 260 } });
+  await page.setContent(`<style>body{margin:0;background:#111}main{display:grid;grid-template-columns:repeat(${pick.length},1fr);gap:6px}img{width:100%;display:block}</style><main>${pick.map((s) => `<img src="data:image/png;base64,${fs.readFileSync(path.join(OUT, s.file)).toString('base64')}">`).join('')}</main>`, { waitUntil: 'domcontentloaded', timeout: 120000 });
+  await page.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {}))));
+  await page.screenshot({ path: file, type: 'jpeg', quality: 72, fullPage: true, timeout: 120000 });
+  await page.close();
+}
+
+// One sheet for the juror: this build on top, the most recent earlier builds beneath it, each as a strip.
+async function priorsSheet(browser, rows, file) {
+  const page = await browser.newPage({ viewport: { width: 1600, height: 900 } });
+  const html = rows.map((r) => `<figure><figcaption>${r.label.replace(/[<&]/g, '')}</figcaption><img src="data:image/jpeg;base64,${fs.readFileSync(r.file).toString('base64')}"></figure>`).join('');
+  await page.setContent(`<style>body{margin:0;background:#111;font:600 15px system-ui;color:#ddd}figure{margin:0;padding:10px 10px 18px}figcaption{padding:6px 2px 8px}img{width:100%;display:block}</style>${html}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
+  await page.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {}))));
+  await page.screenshot({ path: file, fullPage: true, timeout: 120000 });
+  await page.close();
+}
+
+// Originality: is the design DNA sound, and is the rendered structure new?
+function originality(fp) {
+  const project = projectId();
+  const dna = checkDna(process.cwd(), { project });
+  const round = (x) => ({ subject: x.subject, structure: x.sim.structure, overall: x.sim.overall, parts: x.sim.parts });
+  const priors = fp ? priorBuilds({ exclude: project }).filter((b) => b.fingerprint).map((b) => ({ subject: b.subject, id: b.id, baseline: !!b.baseline, sim: similarity(fp, b.fingerprint) })).sort((a, b) => b.sim.structure - a.sim.structure) : [];
+  const refDir = path.resolve('juried/references');
+  const refs = fp && fs.existsSync(refDir) ? fs.readdirSync(refDir).map((d) => { try { return JSON.parse(fs.readFileSync(path.join(refDir, d, 'facts.json'), 'utf8')); } catch { return null; } }).filter((f) => f?.structure).map((f) => ({ subject: f.url, sim: similarity(fp, f.structure) })).sort((a, b) => b.sim.overall - a.sim.overall) : [];
+  const reskins = priors.filter((p) => p.sim.structure >= GATES.maxStructureSimilarity || p.sim.overall >= GATES.maxOverallSimilarity);
+  const clones = refs.filter((r) => r.sim.overall >= GATES.maxReferenceSimilarity || r.sim.structure >= GATES.maxReferenceStructure);
+  return { project, dna, priors: priors.map(round), references: refs.map(round), reskins: reskins.map(round), clones: clones.map(round) };
+}
+
+function gate(results, orig) {
   const g = [];
   const add = (id, pass, detail) => g.push({ id, pass, detail });
   const warn = (id, detail) => g.push({ id, pass: true, warning: true, detail });
@@ -193,7 +239,7 @@ function gate(results) {
     const blank = r.paint.filter((p) => p.visible && p.std < GATES.minPaintStd);
     add(`${v}: every canvas/video painted`, blank.length === 0, blank.map((b) => `${b.name} std=${b.std?.toFixed(1)}`));
   }
-  // Framework: a Juried build must be the React app from the template, never a hand-written HTML page.
+  // Framework: a Juried build is a React app scaffolded from the starter, never a hand-written HTML page.
   if (!EXTERNAL) {
     const pkg = fs.existsSync('package.json') ? JSON.parse(fs.readFileSync('package.json', 'utf8')) : {};
     const hasReact = !!(pkg.dependencies?.react && pkg.dependencies?.['react-dom']);
@@ -206,6 +252,19 @@ function gate(results) {
     const have = new Set(results.flatMap((r) => r.links).map((u) => u.replace(/\/$/, '')));
     const missing = req.filter((u) => !have.has(u.replace(/\/$/, '')));
     add('functionality: original links retained', missing.length === 0, missing.length ? missing : `${req.length}/${req.length}`);
+  }
+  // Originality: a new site every time. Inspired by this build's references, never a copy of one, and never
+  // an earlier Juried build with new words and colours.
+  if (orig) {
+    const pct = (n) => `${Math.round(n * 100)}%`;
+    add('originality: design DNA complete, sourced from fresh references, and new', orig.dna.ok, orig.dna.errors.slice(0, 8));
+    for (const w of orig.dna.warnings) warn('originality: design DNA', w);
+    add('originality: not a re-skin of an earlier build', orig.reskins.length === 0,
+      orig.reskins.length ? orig.reskins.map((p) => `same structure as "${p.subject}": structure ${pct(p.structure)} alike (limit ${pct(GATES.maxStructureSimilarity)}), overall ${pct(p.overall)}; most alike in ${Object.entries(p.parts).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => `${k} ${pct(v)}`).join(', ')}`)
+        : (orig.priors[0] ? `closest earlier build "${orig.priors[0].subject}": structure ${pct(orig.priors[0].structure)} alike` : 'no earlier builds'));
+    add('originality: not a clone of a reference', orig.clones.length === 0,
+      orig.clones.length ? orig.clones.map((p) => `too close to ${p.subject}: ${pct(p.overall)} alike overall, structure ${pct(p.structure)}`)
+        : (orig.references[0] ? `closest reference ${orig.references[0].subject}: ${pct(orig.references[0].overall)} alike` : 'no measured references'));
   }
   return g;
 }
@@ -226,18 +285,37 @@ function gate(results) {
     { name: 'desktop-reduced', width: 1440, height: 900, reducedMotion: true, stops: 6 },
   ];
   const results = [];
+  let orig = null;
   try {
     for (const vp of vps) { process.stdout.write(`• ${vp.name}… `); results.push(await runViewport(browser, url, vp)); console.log('done'); }
     await contactSheet(browser, results.filter((r) => !r.viewport.includes('reduced')));
+    if (!EXTERNAL) {
+      const desktop = results.find((r) => r.viewport === 'desktop');
+      orig = originality(desktop.fingerprint);
+      const stripFile = path.join(OUT, 'strip.jpg');
+      await strip(browser, desktop, stripFile);
+      // What the juror compares against: the most recent earlier builds (and the old fixed template).
+      const rows = [{ label: 'THIS BUILD', file: stripFile }];
+      for (const b of priorBuilds({ exclude: orig.project }).slice(0, 4)) {
+        const f = b.baseline ? fileURLToPath(new URL('./baseline-strip.jpg', import.meta.url)) : path.join(buildDir(b.id), 'strip.jpg');
+        if (fs.existsSync(f)) rows.push({ label: `EARLIER BUILD: ${b.subject}`, file: f });
+      }
+      if (rows.length > 1) await priorsSheet(browser, rows.slice(0, 4), path.join(OUT, 'sheet-priors.png'));
+      if (!opt('no-record', false) && desktop.fingerprint) {
+        const research = fs.existsSync('juried/research.json') ? JSON.parse(fs.readFileSync('juried/research.json', 'utf8')) : {};
+        const dir = recordBuild({ id: orig.project, subject: research.subject?.name || orig.dna.dna?.subject || path.basename(process.cwd()), folder: process.cwd(), dna: orig.dna.values || null, references: orig.dna.references, fingerprint: desktop.fingerprint });
+        fs.copyFileSync(stripFile, path.join(dir, 'strip.jpg'));
+      }
+    }
   } finally { await browser.close(); stop(); }
-  const all = gate(results);
+  const all = gate(results, orig);
   const gates = all.filter((x) => !x.warning), warnings = all.filter((x) => x.warning);
   const passed = gates.filter((x) => x.pass).length;
-  const report = { url, browser: browserName, at: new Date().toISOString(), gates, warnings, passed, total: gates.length, results };
+  const report = { url, browser: browserName, at: new Date().toISOString(), gates, warnings, passed, total: gates.length, originality: orig && { priors: orig.priors, references: orig.references, dna: { ok: orig.dna.ok, errors: orig.dna.errors, warnings: orig.dna.warnings, references: orig.dna.references } }, results };
   fs.writeFileSync(path.join(OUT, 'report.json'), JSON.stringify(report, null, 2));
   console.log(`\nJury capture (${browserName}) → ${path.relative(process.cwd(), OUT)}`);
   for (const x of gates) console.log(`${x.pass ? '✔' : '✖'} ${x.id}${x.pass ? '' : `  ${JSON.stringify(x.detail).slice(0, 200)}`}`);
   for (const x of warnings) console.log(`! ${x.id}  ${JSON.stringify(x.detail).slice(0, 200)}`);
-  console.log(`\nDeterministic gates: ${passed}/${gates.length} passed. Contact sheets: sheet-desktop.png, sheet-mobile.png`);
+  console.log(`\nDeterministic gates: ${passed}/${gates.length} passed. Contact sheets: sheet-desktop.png, sheet-mobile.png${fs.existsSync(path.join(OUT, 'sheet-priors.png')) ? ', sheet-priors.png (this build beside earlier ones, for the juror)' : ''}`);
   process.exitCode = passed === gates.length ? 0 : 3;
 })();

@@ -1,0 +1,43 @@
+{
+  "note": "Design galleries the scout reads on every build. `pages` are listing pages: {page:1-6} picks a random page number and {pick:a|b} picks one option, so two runs do not read the same listing. `entry` is a regular expression matching the gallery's own link to one entry. kind `sites` means entries lead to live websites (studied with tools/reference.mjs); kind `shots` means entries are design images (looked at, never measured). Add a gallery by adding an object here.",
+  "sources": [
+    {
+      "id": "awwwards",
+      "name": "Awwwards",
+      "kind": "sites",
+      "pages": [
+        "https://www.awwwards.com/websites/sites_of_the_day/?page={page:1-6}",
+        "https://www.awwwards.com/websites/nominees/?page={page:1-4}"
+      ],
+      "tagPage": "https://www.awwwards.com/websites/{tag}/",
+      "tags": ["portfolio", "animation", "scrolling", "single-page", "ui-design", "e-commerce", "architecture", "photography", "hotel-restaurant", "design-agencies", "business-corporate", "fashion", "mobile-apps", "interaction-design", "illustration", "header-design", "webgl", "3d", "art-illustration", "culture-education", "events", "experimental", "film-tv", "food-drink", "games-entertainment", "institutions", "luxury", "magazine-newspaper-blog", "music-sound", "promotional", "real-estate", "social-responsibility", "sports", "startups", "technology", "web-interactive", "clean", "colorful", "data-visualization", "fullscreen", "gallery", "graphic-design", "horizontal-layout", "infinite-scroll", "microinteractions", "minimal", "navigation", "parallax", "photographic", "retro", "storytelling", "transitions", "typography", "unusual-navigation", "video"],
+      "entry": "^https://www\\.awwwards\\.com/sites/[^/?#]+/?$"
+    },
+    {
+      "id": "siteofsites",
+      "name": "Site of Sites",
+      "kind": "sites",
+      "pages": ["https://www.siteofsites.co/?p={page:1-5}"],
+      "entry": "^https://www\\.siteofsites\\.co/websites/[^/?#]+/?$"
+    },
+    {
+      "id": "recent",
+      "name": "recent.design",
+      "kind": "sites",
+      "resolve": true,
+      "pages": ["https://recent.design/websites"],
+      "entry": "^https://recent\\.design/i/[^/?#]+/?$"
+    },
+    {
+      "id": "dribbble",
+      "name": "Dribbble",
+      "kind": "shots",
+      "pages": ["https://dribbble.com/shots/popular/web-design?timeframe={pick:week|month|year}"],
+      "searchPage": "https://dribbble.com/search/{query}",
+      "entry": "^https://dribbble\\.com/shots/\\d+[^/?#]*/?$"
+    }
+  ],
+  "ignoreHosts": [
+    "facebook.com", "instagram.com", "twitter.com", "x.com", "linkedin.com", "youtube.com", "youtu.be", "tiktok.com", "pinterest.com", "pinterest.es", "threads.com", "threads.net", "behance.net", "github.com", "medium.com", "t.me", "wa.me", "apple.com", "google.com", "goo.gl", "bit.ly", "vimeo.com", "discord.gg", "discord.com", "typography.com", "wix.com", "webflow.com", "framer.com", "framer.link", "streamlinehq.com", "thelist.design"
+  ]
+}

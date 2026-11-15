@@ -10,6 +10,8 @@ score them lower. Inflated or vague scoring gets the jury discarded.
 - Contact sheets: `sheet-desktop.png` (desktop scroll stops, in order) and `sheet-mobile.png`.
 - `brief.md`: what the site was meant to achieve and its art direction.
 - `dossier.md`: facts about the company, for judging whether the content is specific and credible.
+- Sometimes `sheet-priors.png`: a strip of this site on top, and beneath it strips of earlier sites made by
+  the same studio. And sometimes the contact sheets of the reference sites that inspired this one.
 
 Open and look at every image before scoring. Judge only what is visible. If something cannot be judged
 from stills (motion, interaction), do not guess; judge what the stills show.
@@ -36,6 +38,18 @@ full-resolution screenshot of the hero before deciding. Typography is where chea
 and name any that are missing in a fix. Imitating the reference's identity (its logo, copy, imagery or a
 page rebuilt section by section) is a template tell, and Creativity cannot exceed 5.0.
 
+**Originality check (before you score Creativity).** When you are given `sheet-priors.png` or reference
+sheets, compare structure only, and ignore colour, typefaces, photographs and words: where the navigation
+sits, how the first screen is composed, and the kind, order and shape of the sections.
+- If this site has the same structure as one of the studio's earlier sites, it is a **re-skin**: the same
+  page with new paint. Set `originality.finding` to `"reskin"`, name the earlier site, list it in
+  `templateTells`, and Creativity cannot exceed 4.0 and Design cannot exceed 6.0, however polished it is.
+- If it reproduces one reference's structure section by section, it is a **clone**: `"clone"`, name the
+  reference, and Creativity cannot exceed 5.0.
+- If it shares only a part or two with any of them (a similar rail, a similar table), that is inspiration
+  working as intended: `"original"`.
+A studio that ships the same layout to every client is not shortlisted, whatever the finish.
+
 Calibration anchors: a typical competent agency site is 6.0–6.8. 7.0+ means you would shortlist it.
 8.5+ means Site of the Day contender; say exactly why if you give it. Never give 10.
 
@@ -55,6 +69,7 @@ low-contrast text; placeholder content.
   "weighted": 7.4,
   "verdict": "pass",
   "strengths": ["one line each, specific, with the screenshot name"],
+  "originality": { "finding": "original", "closestTo": "name of the most similar earlier site or reference, or null", "why": "one line on what is structurally shared or different" },
   "templateTells": ["any anti-template item you saw, with the screenshot name"],
   "fixes": [
     { "priority": 1, "where": "mobile-00.png (hero)", "dimension": "usability",
@@ -64,7 +79,8 @@ low-contrast text; placeholder content.
 }
 ```
 
-`verdict` is `pass` when weighted ≥ 7.0 and no single dimension is below 6.0, else `revise`.
+`verdict` is `pass` when weighted ≥ 7.0, no single dimension is below 6.0 and `originality.finding` is
+`"original"` (or you were given nothing to compare with), else `revise`.
 Give at most 7 fixes, most important first. Each must name the screenshot, the problem as a visitor would
 experience it, and a concrete change. No generic advice ("improve spacing").
 

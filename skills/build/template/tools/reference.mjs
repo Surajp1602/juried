@@ -6,12 +6,15 @@
 // For each site: desktop and mobile contact sheets of the whole page, plus facts.json with what makes it
 // work, measured in a real browser: typefaces and type scale, colour palette, light or dark, content width,
 // section rhythm, button shape, and the motion / 3D stack (GSAP, Lenis, three.js, Spline, Lottie, video,
-// WebGL canvases, sticky and pinned sections). These are the qualities to borrow. The site's own logo,
-// copy, photography and code are never reused.
+// WebGL canvases, sticky and pinned sections), and its structure: where the navigation sits, how the first
+// screen is composed, and every section's height, tone, column count, alignment and media weight, in order.
+// These are the qualities to borrow. The site's own logo, copy, photography and code are never reused, and
+// the jury fails a build whose structure matches one reference too closely (a clone).
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
+import { FINGERPRINT, outline } from './lib/fingerprint.mjs';
 
 const argv = process.argv.slice(2);
 const outIdx = argv.indexOf('--out');
@@ -131,7 +134,10 @@ async function study(browser, url) {
       await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
       await page.waitForLoadState('load', { timeout: 30000 }).catch(() => {});
       await page.waitForTimeout(2500);
-      if (vp.name === 'desktop') Object.assign(facts, await page.evaluate(MEASURE));
+      if (vp.name === 'desktop') {
+        Object.assign(facts, await page.evaluate(MEASURE));
+        facts.structure = await page.evaluate(FINGERPRINT).catch(() => null);
+      }
       const files = await shootPage(page, vp.name, dir, vp.stops);
       await sheet(browser, files, vp.cols, path.join(dir, `sheet-${vp.name}.png`));
       for (const f of files) fs.rmSync(f, { force: true });
@@ -155,6 +161,12 @@ const describe = (f) => {
     `  colours: background ${f.colors.background.slice(0, 3).join(' ')}, text ${f.colors.text.slice(0, 2).join(' ')}, buttons ${f.colors.buttons.join(' ') || '-'}`,
     `  content width ${f.contentWidth[0] || '?'}px, button radius ${f.buttonRadius[0] || '?'}`,
     `  motion and 3D: ${stack.join(', ') || 'none detected'}; ${s.webglCanvases} WebGL canvas(es), ${s.videos} video(s), ${s.stickyOrFixed} sticky/fixed element(s)`,
+    ...(f.structure ? [
+      `  navigation: ${f.structure.nav.pos}${f.structure.nav.pinned ? ', pinned' : ''}, ${f.structure.nav.links} links`,
+      `  first screen: headline ${f.structure.hero.text ? `${f.structure.hero.text.align}-aligned at ${Math.round(f.structure.hero.text.x * 100)}% across / ${Math.round(f.structure.hero.text.y * 100)}% down, ${Math.round(f.structure.hero.text.size * 100)}% of screen height tall` : 'none'}; main visual ${f.structure.hero.media.kind}${f.structure.hero.media.kind === 'none' ? '' : ` covering ${Math.round(f.structure.hero.media.area * 100)}%`}`,
+      '  sections (size S/M/L/XL in screens, tone, columns, heading alignment, media weight):',
+      outline(f.structure).split('\n').map((l) => '    ' + l).join('\n'),
+    ] : []),
   ].join('\n');
 };
 
@@ -171,5 +183,6 @@ const describe = (f) => {
     console.log(describe(facts));
   }
   await browser.close();
-  console.log('\nNext: look at each sheet-desktop.png and sheet-mobile.png, then write what to borrow (and what not to) in juried/brief.md.');
+  console.log('\nNext: look at each sheet-desktop.png and sheet-mobile.png. Decide what each site contributes (a different part of the');
+  console.log('design from each), and record it in juried/dna.json. Cite a site there as "ref:<host>".');
 })().catch((err) => { console.error(`✖ ${err.message}`); process.exit(1); });

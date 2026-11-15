@@ -31,7 +31,9 @@ export function playDemo(panel) {
 }
 
 export function demos(root) {
-  const panels = [...root.querySelectorAll('[role="tabpanel"]')];
+  // With tabs: one demo per tab panel. Without: the root itself is the only panel.
+  const tabPanels = [...root.querySelectorAll('[role="tabpanel"]')];
+  const panels = tabPanels.length ? tabPanels : [root];
   const runners = new Map(panels.map((p) => [p, playDemo(p)]));
   let started = false;
   // Watch the demo boxes themselves (a tall section may never be 35% visible on a phone).

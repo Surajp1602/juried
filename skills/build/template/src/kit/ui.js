@@ -1,4 +1,5 @@
-// Small, dependency-light UI behaviours shared by every Juried site.
+// Small, dependency-light UI behaviours. Every one is opt-in and has no look of its own: it adds behaviour
+// to markup and styles that each build designs for itself.
 import gsap from 'gsap';
 
 export const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -29,9 +30,11 @@ export function tabs(root) {
   return { select };
 }
 
-// Infinite logo marquee: duplicate the list once so translateX(-50%) loops seamlessly.
+// Endless marquee: duplicates the track's items once so a translate of -50% loops seamlessly. Mark the moving
+// element with data-marquee-track; speed and direction are CSS (--marquee-duration, --marquee-direction).
 export function marquee(root) {
-  const track = root.querySelector('.marquee__track');
+  const track = root.querySelector('[data-marquee-track]') || root.firstElementChild;
+  if (!track) return;
   [...track.children].forEach((li) => { const c = li.cloneNode(true); c.setAttribute('aria-hidden', 'true'); c.querySelectorAll('img').forEach((im) => (im.alt = '')); track.appendChild(c); });
 }
 
