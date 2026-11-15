@@ -2,7 +2,7 @@
 // UserPromptSubmit hook: when someone asks for a website, make sure the Juried build skill runs,
 // so the build starts with the media question, searches the design galleries live, and is a React app
 // designed for this request from the blank starter: never a hand-written HTML/CSS page and never an
-// earlier build re-skinned. Anything printed here is added to Claude's context for that prompt.
+// earlier build re-skinned. Anything printed here is added to the model's context for that prompt.
 let input = '';
 process.stdin.on('data', (c) => (input += c));
 process.stdin.on('end', () => {
