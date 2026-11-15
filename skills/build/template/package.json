@@ -3,13 +3,15 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "A website built by Juried: research, art direction, generated film, real-time 3D, and a jury.",
+  "description": "A website built by Juried: live design research, a design DNA of its own, real-time motion, and a jury.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "doctor": "node tools/doctor.mjs",
+    "scout": "node tools/scout.mjs",
     "reference": "node tools/reference.mjs",
+    "dna": "node tools/dna.mjs",
     "assets:check": "node tools/hf.mjs check",
     "assets:smoke": "node tools/hf.mjs smoke",
     "assets:dry": "node tools/hf.mjs run juried/asset-plan.json --dry-run",
@@ -18,10 +20,10 @@
     "media": "node tools/film.mjs all",
     "jury": "vite build && node tools/jury/capture.mjs",
     "jury:quick": "vite build && node tools/jury/capture.mjs --quick",
-    "jury:calibrate": "vite build && node tools/jury/mutate.mjs"
+    "jury:calibrate": "vite build && node tools/jury/mutate.mjs",
+    "jury:selftest": "node tools/jury/selftest.mjs"
   },
   "dependencies": {
-    "@fontsource-variable/manrope": "^5.3.0",
     "gsap": "^3.15.0",
     "lenis": "^1.3.26",
     "react": "^19.3.0",

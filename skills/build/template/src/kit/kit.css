@@ -1,0 +1,54 @@
+/* Kit: a reset and the few rules the opt-in behaviours need in order to work.
+   Nothing here sets a colour, a typeface, a size, a spacing or a layout. All of that is this build's own,
+   in src/site.css. Do not add design to this file. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { margin: 0; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+img, video, canvas, svg { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure, blockquote { margin: 0; }
+ul[role='list'], ol[role='list'] { padding: 0; list-style: none; }
+[hidden] { display: none !important; }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.skip { position: absolute; left: 1rem; top: -6rem; z-index: 1000; padding: 0.6rem 1rem; background: Canvas; color: CanvasText; }
+.skip:focus { top: 1rem; }
+
+/* marquee(): the track moves by half its (duplicated) width */
+[data-marquee] { overflow: hidden; }
+[data-marquee-track] { display: flex; width: max-content; animation: kit-marquee var(--marquee-duration, 60s) linear infinite var(--marquee-direction, normal); }
+[data-marquee]:hover [data-marquee-track] { animation-play-state: var(--marquee-hover, paused); }
+[data-marquee-track] > * { flex: none; }
+@keyframes kit-marquee { to { transform: translateX(-50%); } }
+
+/* scrollFilm(): a tall section with a sticky stage; the clip, or its first and last stills, fills the stage */
+[data-film] { position: relative; height: var(--film-length, 400vh); }
+[data-film-stage] { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+[data-film] video, [data-film-fallback], [data-film-fallback] img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+[data-film-fallback] { opacity: 0; }
+[data-film].no-video [data-film-fallback] { opacity: 1; }
+[data-film].no-video video { visibility: hidden; }
+[data-film-fallback] img + img { opacity: clamp(0, calc((var(--film-p, 0) - 0.3) * 2.5), 1); }
+[data-film-fallback] img:not([src]) { visibility: hidden; }
+[data-film] [data-step] { opacity: 0; pointer-events: none; }
+[data-film] [data-step].is-on { opacity: 1; pointer-events: auto; }
+[data-film-bar] { transform-origin: left; transform: scaleX(0); }
+
+/* livingMedia(): the loop sits over its still and shows once it plays */
+[data-media-box] { position: relative; overflow: hidden; }
+[data-media-box] > img, [data-media-box] > video { width: 100%; height: 100%; object-fit: cover; }
+[data-media-box] > video { position: absolute; inset: 0; opacity: 0; }
+[data-media-box].is-playing > video { opacity: 1; }
+
+/* demos(): items appear as they play; with reduced motion everything is shown */
+[data-demo='chat'] > * { opacity: 0.4; }
+[data-demo='chat'] > .is-in { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-marquee-track] { animation: none; flex-wrap: wrap; width: auto; }
+  [data-film] { height: auto; }
+  [data-film-stage] { position: relative; }
+  [data-film] [data-step] { opacity: 1; }
+  *, *::before, *::after { scroll-behavior: auto !important; }
+}

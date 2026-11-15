@@ -100,4 +100,4 @@ Stills ≈ $0.04 each; Seedance 2.0 ≈ $0.30 per second. A typical plan (2 keyf
 After generation, look at every still and a few frames of every clip:
 `ffmpeg -i juried/raw/film.mp4 -vf "select='not(mod(n,24))',scale=480:-1,tile=3x3" -frames:v 1 juried/raw/film-tiles.jpg`.
 Regenerate (`--only id`) anything with artefacts, wrong palette, legible text, or faces. One retry each;
-if it is still wrong, use the recipe's designed fallback instead of a weak asset.
+if it is still wrong, design that slot to work without the asset rather than ship a weak one.

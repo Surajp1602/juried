@@ -1,69 +1,107 @@
 # Phase 2: Direction
 
 A $50k site is not "more effects". It is one strong idea, executed with restraint, where every detail agrees
-with every other detail. Write the brief before touching code; the jury scores the build against it.
+with every other detail, and it does not look like the studio's last job. Write the design DNA and the brief
+before touching code; the jury checks the build against both.
 
 ## 1. Find the big idea in the brand itself
 
 Start from what the company already is: its name, its logo, its product's physical nature, its customers'
-world. Turn that into one visual metaphor that can carry the whole page.
+world. Turn that into one visual metaphor that can carry the whole page. The idea decides the signature
+moment; it does not have to be 3D, and it does not have to be in the first screen.
 
-| Brand | Metaphor | Signature moment |
+| Brand | Metaphor | A signature moment it could lead to |
 |---|---|---|
-| Fluid AI (agentic AI for enterprises) | Fluid becomes form: chaos organised into precise structure | Molten gold pours into the ΛI mark and melts as you scroll into a macro film where gold settles into a lattice |
-| A private bank | The vault: weight, privacy, light on metal | A brushed-steel door mark that opens on scroll into the ledger |
-| A coffee roaster | The pour | A real-time pour of dark liquid that fills the logo; stills of origin farms at dawn |
-| A logistics platform | Flow through a network | Particles routing along a 3D map toward the logo |
+| An AI platform for enterprises | Chaos organised into structure | Scattered rows of a real workflow snap into an ordered table as the reader scrolls |
+| A private bank | The ledger: weight, privacy, precision | A single ruled page that fills line by line, set in engraved numerals |
+| A coffee roaster | The pour | A full-bleed film of one pour, scrubbed by scroll, with the menu written over it |
+| A logistics platform | Flow through a network | A live route map as the page's background, with sections attached to stops |
+| A sourdough bakery | Selling out | A counter of loaves left today, larger than the headline |
 
-The signature moment happens once, at the top, and echoes once at the end (the closing CTA). Everything in
-between is calm, editorial and fast to read.
+## 2. The design DNA (`juried/dna.json`)
 
-## 1b. When the person gave an inspiration site
+The DNA is what makes this build structurally different from the last one. It is nine decisions and a
+section plan. `node tools/dna.mjs init` creates the file, lists the axes with examples, and prints what the
+most recent builds decided.
 
-Their site leads, but it is inspiration, not a template. In `juried/brief.md`, add an **Inspired by <site>**
-section with two lists.
+| Axis | The question |
+|---|---|
+| `layout` | What is the grid and how is content placed on it? |
+| `hero` | What is the first screen made of? |
+| `nav` | Where does navigation live and how does it behave? |
+| `type` | What is the typographic voice? |
+| `color` | What is the colour strategy? (The hues themselves come from the brand.) |
+| `rhythm` | How does the page pace itself from top to bottom? |
+| `motion` | What is the motion signature? |
+| `signature` | What is the one moment a visitor remembers? |
+| `imagery` | What are the pictures? |
 
-**What we borrow:** 3–6 qualities, each specific enough to check in a screenshot and measured where
-possible from `juried/references/<site>/facts.json`. Examples:
-- "oversized display type, about 84px at weight 340 with tight tracking";
-- "long dark chapters broken by one light chapter";
-- "a single pinned horizontal gallery";
-- "a 1,350px content width with hairline rules";
-- "one WebGL hero, everything else still".
+Each axis is written as:
 
-**What stays ours:** the subject's own logo, colours, typefaces, content and imagery. The big idea still
-comes from the subject's brand (section 1), expressed with the reference's qualities.
+```json
+"layout": {
+  "value": "sidebar-index",
+  "from": "ref:gamma-studio.com",
+  "detail": "A pinned 240px left rail holds a numbered index; all content sits in one column to its right. The reference's rail is 220px and pinned; ours adds the opening hours at its foot."
+}
+```
 
-Rules:
-- Never reuse the reference's logo, copy, photographs, illustrations, icons or code, and never rebuild its
-  pages section by section. The result must never be mistakable for that site.
-- Colours and type come from the subject's brand. Use the reference's palette or typefaces only when the
-  person asks for them explicitly, and even then keep the subject's logo.
-- If a borrowed quality conflicts with the subject's content or with accessibility, say so in the brief and
-  adapt it.
+- `value`: your own short kebab-case name for the decision. The examples the tool prints show the grain,
+  they are not a menu. A new idea gets a new name.
+- `from`: `ref:<host>` for a site studied with `tools/reference.mjs`, `shot:<id>` for a design shot from the
+  scout, or `brand` / `content` when the decision comes from the subject itself.
+- `detail`: what will actually be built, with the numbers you measured on the reference (sizes, column
+  counts, proportions) and how you are changing it.
 
-## 2. Art direction tokens
+The **section plan** lists the page's sections in order. Each has a `name` for what it does on this site
+(`TodaysBake`, `RouteMap`, `PriceLadder`; never `Hero`, `Features`, `Cta`), its `job`, its layout `pattern`
+and its `from`. Sections must not all share one shape.
 
-- **Palette:** take the brand colours from research. Build 60/30/10: a dominant neutral (ink or paper), a
-  secondary neutral for alternating chapters, one accent used sparingly (CTAs, numbers, rules). Name them
-  as CSS custom properties. Warm neutrals with warm accents, cool with cool.
-- **Type:** one display face and one text face at most, preferably the brand's (self-host via
-  `@fontsource-variable/*` when it exists, otherwise the closest high-quality variable face). Display:
-  weight 300–450, tracking −0.03 to −0.045em, line-height 1.0–1.08, sizes with `clamp()`. Text: 16–18px,
-  line-height 1.5–1.6, measure ≤ 65ch. Tabular numerals for statistics.
-- **Grid:** 12 columns, generous margins (`max(1.5rem, (100% - 1400px)/2)`), asymmetric compositions:
-  headline left in 7 columns, supporting copy offset in 4. Vary section rhythm: dark cinematic chapters
-  between light paper chapters.
-- **Motion:** one orchestrated motion per section (a line reveal of the heading, a pinned sequence, a
-  count-up), never a fade-up on every element. `expo.out` / `power3.out`, 0.8–1.4s, 60–90ms staggers,
-  no bounce. Scroll-linked motion only where the content is a sequence (film, gallery).
-- **Photography:** one shoot, not stock. Same light, lens, time of day and palette across every still
-  (for example "blue hour, warm practical lights against deep shadow, charcoal/ivory/gold, 35mm,
-  shallow depth of field"). No legible text in images, no faces for concept work.
-- **Texture:** a whisper of film grain on dark chapters (opacity ≤ 0.08) so gradients do not band and CG
-  reads as photographed.
+`notLike` is one or two sentences on how this structure differs from the recent builds the tool listed.
 
-## 3. Anti-template checklist (every item must be "no")
+### How to borrow (the rules `node tools/dna.mjs check` enforces)
+
+- **Cross-pollinate.** Take a different part of the design from each reference: the navigation from one,
+  the first screen from another, the grid from a third, the type from a fourth. At least three references
+  contribute, and no single reference supplies more than three axes (five if the person named that site).
+  This is what makes the result inspired and still no one's copy.
+- **Learn, do not default.** At least five of the nine axes come from this build's references. `brand` and
+  `content` are for what truly belongs to the subject: usually colour, signature and imagery.
+- **Fresh sources.** Every cited site was found by this build's scout (or registered with `--add`) and
+  studied with `tools/reference.mjs`. A site an earlier build borrowed from cannot be used again.
+- **Do not repeat yourself.** At most three axes may have the same value as any earlier build, and the
+  layout, hero and signature must all differ from the most recent build. The fixed page Juried shipped up
+  to version 1.7 counts as an earlier build: top bar with mega menu, 3D logo beside a left headline,
+  alternating dark and light chapters, scroll film, pinned gallery, orbit hub.
+- **Transform what you take.** Change scale, proportion, order or material so the borrowed quality serves
+  this content. A quality that conflicts with the content or with accessibility is adapted, and the brief
+  says so.
+- **Never take identity.** No reference's logo, copy, photographs, illustrations, icons or code. Colours
+  and typefaces come from the subject's brand unless the person asks otherwise.
+
+The check is necessary, not sufficient: names are easy to change. The jury also measures the rendered page
+(where the navigation is, how the first screen is composed, the sequence of sections) against every earlier
+build and every reference, and shows the juror this build beside the earlier ones.
+
+## 3. Craft floor
+
+These hold on every build. They are standards, not a style: they say how well, never what it looks like.
+Everything a visitor would call the look (which typefaces, what weight and tracking, how many columns, where
+the headline sits, dark or light, how things move) is a DNA decision and is different every time.
+
+- **Palette:** from the brand, named as CSS custom properties. One strategy, applied consistently.
+  Text passes WCAG AA on every background.
+- **Type:** at most two families, self-hosted (`@fontsource-variable/*` or the brand's own files), never a
+  render-blocking font link and never a system fallback as the visible face. Sizes with `clamp()`, body
+  16–19px with a measure of 65 characters or fewer, tabular numerals for statistics.
+- **Grid:** one system, stated in the DNA, with deliberate exceptions. Spacing from a scale.
+- **Motion:** it never delays reading. Text is visible without waiting for an animation. One orchestrated
+  idea per section at most. A complete `prefers-reduced-motion` path.
+- **Imagery:** one shoot, not stock: the same light, lens and palette across every picture. No legible text
+  in generated images, no faces for concept work.
+- **Completeness:** navigation and footer as complete as the original site's, so it reads as a real company.
+
+## 4. Anti-template checklist (every item must be "no")
 
 1. A centred headline over a purple/blue gradient with two pill buttons.
 2. A row of three cards with icons and two-line blurbs as the main content device.
@@ -78,29 +116,31 @@ Rules:
 10. Low-contrast grey body text on dark backgrounds (must pass WCAG AA).
 11. Motion that delays reading (text hidden until an animation finishes, long preloaders).
 12. Placeholder anything.
-
-## 4. Premium signals to include
-
-- The real logo as a 3D object (via `tools/brand.mjs`), not a generic shape.
-- An intro sequence under 3.5s that never blocks reading.
-- Micro-typography: small labels in 0.8rem at 600 weight, section numbering (01, 02, 03), editorial captions.
-- Buttons with considered hover states (magnetic pull or a sliding arrow), focus rings that match the brand.
-- Real product proof shown as interface (demo conversations, workflow steps) rather than described.
-- A mega-menu and a footer as complete as the original's, so it reads as a real company site.
+13. **The page you would have made anyway.** Sections named Hero, Features, Testimonials, FAQ and CTA in
+    that order; a top bar with a logo left and a button right because that is where they go; a 3D object
+    in the hero because the last build had one. If a decision has no source in the DNA, it is a habit.
+14. **A section from an earlier build**, pasted in and re-worded.
 
 ## 5. `juried/brief.md` template
 
 ```markdown
 # Brief: <Subject>
+Media: <own files in … | Higgsfield | none>
 **Big idea:** <one sentence>
-**Signature moment:** <what happens in 3D in the hero, and how it echoes at the end>
-**Film:** first frame <…> → last frame <…>; the film plays as the reader scrolls through <chapter>.
+**Signature moment:** <what happens, where on the page, and why it belongs to this brand>
+**Inspired by:**
+- <site A> (found on <gallery>): <the quality borrowed, measured> → <how it is changed here>
+- <site B> …
+- <site C> …
+**What stays ours:** logo, colours, typefaces, content, imagery
+**Not like the last builds because:** <from dna.json notLike>
 **Audience and promise:** <who, and what they should believe after 10 seconds>
-**Palette:** --ink #…, --paper #…, --accent #…, (--accent-hi, --accent-deep)
+**Palette:** <tokens>
 **Type:** display <family, weights, tracking>, text <family>
+**Grid:** <the system, in numbers>
 **Motion principles:** <3 bullets>
-**Photography:** <one line shoot description reused in every still prompt>
-**Section map:** original section → new section → recipe → media
+**Imagery:** <one line shoot description reused in every prompt, or what replaces pictures>
+**Section map:** original section → new section (from the DNA's section plan) → pattern → media
 **Keep:** navigation, CTAs, forms, embeds (list), legal links
 **Concept notice:** yes/no
 ```

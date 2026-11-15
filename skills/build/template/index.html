@@ -5,19 +5,17 @@
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
 <title>{{Company}}: {{positioning in a few words}}</title>
 <meta content="{{…}}" name="description"/>
-<!-- Concept builds (the person is not the company) keep this noindex tag and the footer notice. Owners remove both. -->
+<!-- Concept builds (the person is not the company) keep this noindex tag and a visible concept notice. Owners remove both. -->
 <meta content="noindex, nofollow" name="robots"/>
-<meta content="#0d0b08" name="theme-color"/>
+<meta content="{{page background colour}}" name="theme-color"/>
+<!-- After `node tools/brand.mjs`, point this at the brand mark: href="/brand/mark.svg" type="image/svg+xml". -->
+<link href="data:," rel="icon"/>
 <meta content="{{…}}" property="og:title"/>
 <meta content="{{…}}" property="og:description"/>
-<meta content="/media/og.jpg" property="og:image"/>
-<link href="/brand/mark.svg" rel="icon" type="image/svg+xml"/>
-<link as="image" href="/brand/mark-sdf.png" rel="preload"/>
 </head>
-<body class="is-loading">
+<body>
 <div id="root"></div>
 <script src="/src/main.jsx" type="module"></script>
-<!-- Third-party embeds from the original site (chat assistant, scheduler), kept exactly as they were -->
-<!-- {{Original third-party embeds from juried/research.json "embeds" go here, copied exactly (chat widgets, schedulers).}} -->
+<!-- Third-party embeds from the original site (chat assistant, scheduler) go here, copied exactly from juried/research.json "embeds". -->
 </body>
 </html>

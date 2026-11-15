@@ -1,8 +1,8 @@
 {
   "name": "juried",
   "displayName": "Juried",
-  "version": "1.7.0",
-  "description": "A design studio with a jury: one sentence in, a researched, art-directed, cinematic 3D website out, graded by a calibrated vision jury until it scores 7+/10.",
+  "version": "2.0.0",
+  "description": "A design studio with a jury: one sentence in, a researched website out that is structurally new every time. It searches Awwwards, Site of Sites, recent.design and Dribbble live on each build, borrows a different part of the design from each reference, and is graded by a calibrated vision jury, with gates that fail re-skins and clones, until it scores 7+/10.",
   "author": {
     "name": "Suraj Pawar",
     "url": "https://github.com/Surajp1602"
@@ -10,5 +10,17 @@
   "homepage": "https://github.com/Surajp1602/juried",
   "repository": "https://github.com/Surajp1602/juried",
   "license": "MIT",
-  "keywords": ["website", "landing-page", "webgl", "3d", "design", "higgsfield", "gsap", "three.js", "jury", "evaluation"]
+  "keywords": [
+    "website",
+    "landing-page",
+    "design",
+    "inspiration",
+    "awwwards",
+    "webgl",
+    "3d",
+    "higgsfield",
+    "gsap",
+    "jury",
+    "evaluation"
+  ]
 }

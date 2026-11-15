@@ -1,0 +1,213 @@
+{
+ "note": "Structures every new build is compared with even when this computer has no build history. The first entry is the fixed page skeleton Juried shipped up to 1.7: a build that reproduces it is a re-skin.",
+ "builds": [
+  {
+   "id": "juried-1x-template",
+   "subject": "Juried 1.x template skeleton",
+   "at": "2026-09-26T00:00:00.000Z",
+   "dna": {
+    "layout": "editorial-chapters",
+    "hero": "3d-object-beside-headline",
+    "nav": "top-bar-mega-menu",
+    "type": "single-grotesk-light-tight",
+    "color": "warm-neutral-plus-one-accent",
+    "rhythm": "alternating-dark-light-chapters",
+    "motion": "scroll-scrubbed-film",
+    "signature": "liquid-metal-logo",
+    "imagery": "generated-film-and-stills"
+   },
+   "fingerprint": {
+    "v": 1,
+    "viewport": [
+     1440,
+     900
+    ],
+    "screens": 13.9,
+    "nav": {
+     "pos": "top",
+     "pinned": true,
+     "links": "many"
+    },
+    "hero": {
+     "text": {
+      "x": 0.23,
+      "y": 0.54,
+      "w": 0.4,
+      "size": 0.093,
+      "align": "start",
+      "lines": 1
+     },
+     "media": {
+      "kind": "canvas",
+      "area": 0.88,
+      "x": 0.5
+     }
+    },
+    "sections": [
+     {
+      "name": "hero",
+      "h": 0.88,
+      "size": "M",
+      "tone": "image",
+      "cols": 3,
+      "align": "start",
+      "media": "heavy",
+      "flags": []
+     },
+     {
+      "name": "clients",
+      "h": 0.21,
+      "size": "S",
+      "tone": "light",
+      "cols": 1,
+      "align": "start",
+      "media": "none",
+      "flags": []
+     },
+     {
+      "name": "film",
+      "h": 4.2,
+      "size": "XL",
+      "tone": "dark",
+      "cols": 1,
+      "align": "start",
+      "media": "some",
+      "flags": [
+       "pin"
+      ]
+     },
+     {
+      "name": "caps",
+      "h": 0.97,
+      "size": "M",
+      "tone": "light",
+      "cols": 2,
+      "align": "start",
+      "media": "none",
+      "flags": [
+       "toggle"
+      ]
+     },
+     {
+      "name": "cases",
+      "h": 1.6,
+      "size": "L",
+      "tone": "light",
+      "cols": 3,
+      "align": "start",
+      "media": "none",
+      "flags": [
+       "pin",
+       "hscroll"
+      ]
+     },
+     {
+      "name": "found",
+      "h": 0.87,
+      "size": "M",
+      "tone": "dark",
+      "cols": 3,
+      "align": "start",
+      "media": "none",
+      "flags": []
+     },
+     {
+      "name": "integ",
+      "h": 1.05,
+      "size": "M",
+      "tone": "dark",
+      "cols": 2,
+      "align": "start",
+      "media": "some",
+      "flags": []
+     },
+     {
+      "name": "flows",
+      "h": 0.99,
+      "size": "M",
+      "tone": "light",
+      "cols": 2,
+      "align": "start",
+      "media": "none",
+      "flags": [
+       "toggle"
+      ]
+     },
+     {
+      "name": "faq",
+      "h": 0.63,
+      "size": "M",
+      "tone": "light",
+      "cols": 2,
+      "align": "start",
+      "media": "none",
+      "flags": [
+       "toggle"
+      ]
+     },
+     {
+      "name": "cta",
+      "h": 0.89,
+      "size": "M",
+      "tone": "dark",
+      "cols": 2,
+      "align": "centre",
+      "media": "heavy",
+      "flags": []
+     },
+     {
+      "name": "news",
+      "h": 0.73,
+      "size": "M",
+      "tone": "light",
+      "cols": 3,
+      "align": "start",
+      "media": "some",
+      "flags": []
+     },
+     {
+      "name": "foot",
+      "h": 0.81,
+      "size": "M",
+      "tone": "dark",
+      "cols": 3,
+      "align": "start",
+      "media": "none",
+      "flags": []
+     }
+    ],
+    "type": {
+     "display": "manrope variable",
+     "text": "manrope variable",
+     "weight": 340,
+     "tracking": -0.045,
+     "upper": false
+    },
+    "color": {
+     "theme": "mixed",
+     "dark": 0.57,
+     "accentHue": 60,
+     "bg": {
+      "h": 43,
+      "s": 0.47,
+      "l": 0.97
+     }
+    },
+    "classes": [
+     "hero",
+     "clients",
+     "film",
+     "caps",
+     "cases",
+     "found",
+     "integ",
+     "flows",
+     "faq",
+     "cta",
+     "news",
+     "foot"
+    ]
+   }
+  }
+ ]
+}
